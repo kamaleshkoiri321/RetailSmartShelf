@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetailAI - Smart Shelf Monitoring</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+</head>
+<body class="landing-page">
+    <!-- Navigation Bar -->
+    <nav id="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>RetailAI</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features" class="nav-scroll">Features</a></li>
+                <li><a href="#benefits" class="nav-scroll">Benefits</a></li>
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+                <li><a href="{{ url_for('register') }}">Register</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>RetailAI Smart Shelf Monitoring</h1>
+                <p>Advanced retail shelf monitoring system with AI-powered product detection and expiry tracking</p>
+                <div class="hero-buttons">
+                    <a href="{{ url_for('register') }}" class="btn primary-btn">Get Started</a>
+                    <a href="#features" class="btn secondary-btn">Learn More</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="{{ url_for('static', filename='images/hero-image.svg') }}" alt="RetailAI Dashboard">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Key Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3>Smart Detection</h3>
+                    <p>Capture shelf images using your device camera or upload shelf images for product detection</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3>Expiry Tracking</h3>
+                    <p>Automatically track product expiration dates and receive alerts for items nearing expiry</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <h3>Discount Suggestions</h3>
+                    <p>Get intelligent discount recommendations to minimize losses on soon-to-expire products</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Inventory Management</h3>
+                    <p>Comprehensive inventory dashboard with real-time stock levels and product status</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section id="benefits" class="benefits">
+        <div class="container">
+            <h2 class="section-title">Why Choose RetailAI?</h2>
+            <div class="benefits-container">
+                <div class="benefit-content">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h3>Reduce Food Waste</h3>
+                            <p>Cut inventory losses by up to 30% with proactive expiry management</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h3>Save Time</h3>
+                            <p>Automate manual inventory checks and reduce shelf monitoring time by 75%</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-smile"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h3>Improve Customer Satisfaction</h3>
+                            <p>Ensure fresh products and avoid expired items reaching your customers</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="benefit-image">
+                    <img src="{{ url_for('static', filename='images/benefits-image.svg') }}" alt="RetailAI Benefits">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to optimize your retail operations?</h2>
+            <p>Join thousands of retailers who are reducing waste and increasing profits with RetailAI</p>
+            <a href="{{ url_for('register') }}" class="btn primary-btn">Get Started Today</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>RetailAI</h2>
+                    <p>Smart Shelf Monitoring System</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#benefits">Benefits</a></li>
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                        <li><a href="{{ url_for('register') }}">Register</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-envelope"></i> info@retailai.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (123) 456-7890</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 RetailAI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-scroll').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                window.scrollTo({
+                    top: targetElement.offsetTop - 70,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

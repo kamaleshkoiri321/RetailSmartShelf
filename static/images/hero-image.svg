@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+  <style>
+    .dashboard {
+      fill: #fff;
+      stroke: #ddd;
+      stroke-width: 2;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+    }
+    .header {
+      fill: #3498db;
+    }
+    .panel {
+      fill: #f8f9fa;
+      stroke: #e9ecef;
+      stroke-width: 1;
+    }
+    .chart-bar {
+      fill: #3498db;
+    }
+    .chart-bar-warning {
+      fill: #f39c12;
+    }
+    .chart-bar-danger {
+      fill: #e74c3c;
+    }
+    .icon {
+      fill: #3498db;
+    }
+    .icon-circle {
+      fill: rgba(52, 152, 219, 0.1);
+    }
+    .product {
+      fill: #ffffff;
+      stroke: #e9ecef;
+      stroke-width: 1;
+    }
+    .product-image {
+      fill: #f1f2f6;
+    }
+    .text-dark {
+      fill: #2c3e50;
+    }
+    .text-muted {
+      fill: #7f8c8d;
+    }
+    .text-primary {
+      fill: #3498db;
+    }
+    .text-light {
+      fill: #ffffff;
+    }
+    .status-good {
+      fill: #2ecc71;
+    }
+    .status-warning {
+      fill: #f39c12;
+    }
+    .status-danger {
+      fill: #e74c3c;
+    }
+  </style>
+  
+  <!-- Main Dashboard -->
+  <rect class="dashboard" x="50" y="50" width="500" height="300" rx="8" />
+  
+  <!-- Dashboard Header -->
+  <rect class="header" x="50" y="50" width="500" height="40" rx="8" ry="0" />
+  
+  <!-- Header Title -->
+  <text class="text-light" x="75" y="75" font-family="Arial" font-weight="bold" font-size="16">RetailAI Dashboard</text>
+  
+  <!-- Left Panel - Analytics -->
+  <rect class="panel" x="65" y="105" width="230" height="230" rx="6" />
+  <text class="text-dark" x="85" y="130" font-family="Arial" font-weight="bold" font-size="14">Product Expiry Analytics</text>
+  
+  <!-- Chart -->
+  <rect class="chart-bar" x="85" y="235" width="40" height="80" rx="3" />
+  <rect class="chart-bar-warning" x="135" y="195" width="40" height="120" rx="3" />
+  <rect class="chart-bar-danger" x="185" y="145" width="40" height="170" rx="3" />
+  <rect class="chart-bar" x="235" y="265" width="40" height="50" rx="3" />
+  
+  <!-- Chart Labels -->
+  <text class="text-muted" x="105" y="330" font-family="Arial" font-size="10" text-anchor="middle">Fresh</text>
+  <text class="text-muted" x="155" y="330" font-family="Arial" font-size="10" text-anchor="middle">7 Days</text>
+  <text class="text-muted" x="205" y="330" font-family="Arial" font-size="10" text-anchor="middle">3 Days</text>
+  <text class="text-muted" x="255" y="330" font-family="Arial" font-size="10" text-anchor="middle">Expired</text>
+  
+  <!-- Right Panel - Products -->
+  <rect class="panel" x="305" y="105" width="230" height="230" rx="6" />
+  <text class="text-dark" x="325" y="130" font-family="Arial" font-weight="bold" font-size="14">Products</text>
+  
+  <!-- Product Items -->
+  <rect class="product" x="320" y="145" width="200" height="50" rx="4" />
+  <circle class="product-image" cx="345" cy="170" r="15" />
+  <text class="text-dark" x="370" y="165" font-family="Arial" font-weight="600" font-size="12">Milk</text>
+  <text class="text-muted" x="370" y="180" font-family="Arial" font-size="10">Batch: A123</text>
+  <rect class="status-good" x="490" y="160" width="10" height="10" rx="5" />
+  
+  <rect class="product" x="320" y="205" width="200" height="50" rx="4" />
+  <circle class="product-image" cx="345" cy="230" r="15" />
+  <text class="text-dark" x="370" y="225" font-family="Arial" font-weight="600" font-size="12">Bread</text>
+  <text class="text-muted" x="370" y="240" font-family="Arial" font-size="10">Batch: B456</text>
+  <rect class="status-warning" x="490" y="220" width="10" height="10" rx="5" />
+  
+  <rect class="product" x="320" y="265" width="200" height="50" rx="4" />
+  <circle class="product-image" cx="345" cy="290" r="15" />
+  <text class="text-dark" x="370" y="285" font-family="Arial" font-weight="600" font-size="12">Eggs</text>
+  <text class="text-muted" x="370" y="300" font-family="Arial" font-size="10">Batch: C789</text>
+  <rect class="status-danger" x="490" y="280" width="10" height="10" rx="5" />
+  
+  <!-- Icons -->
+  <circle class="icon-circle" cx="110" cy="170" r="20" />
+  <path class="icon" d="M105 170 L115 170 M110 165 L110 175" stroke-width="2" stroke="#3498db" fill="none" />
+  
+  <circle class="icon-circle" cx="165" cy="170" r="20" />
+  <path class="icon" d="M158 170 L172 170 M165 163 L165 177" stroke-width="2" stroke="#f39c12" fill="none" />
+  
+  <circle class="icon-circle" cx="220" cy="170" r="20" />
+  <path class="icon" d="M213 170 L227 170" stroke-width="2" stroke="#e74c3c" fill="none" />
+</svg>

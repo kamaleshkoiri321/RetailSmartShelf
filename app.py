@@ -34,7 +34,7 @@ with app.app_context():
 # Routes
 @app.route('/')
 def index():
-    return redirect(url_for('login'))
+    return render_template('landing.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
