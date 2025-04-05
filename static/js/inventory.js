@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const captureProductImageBtn = document.getElementById('captureProductImageBtn');
     const productWebcam = document.getElementById('productWebcam');
     const productImagePreview = document.getElementById('productImagePreview');
+    const cameraStatus = document.getElementById('cameraStatus');
     
     let productStream = null;
     let capturedProductImage = null;
@@ -29,12 +30,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Webcam functionality for product image
     startProductCameraBtn.addEventListener('click', async function() {
         try {
-            // Animate the button first
+            // Add animation to button
             startProductCameraBtn.classList.add('pulse');
+            
+            // Update status message
+            cameraStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Accessing camera...';
+            cameraStatus.classList.add('active');
             
             productStream = await navigator.mediaDevices.getUserMedia({ 
                 video: {
-                    width: { ideal: 640 },
+                    width: { ideal: 480 },
                     height: { ideal: 480 },
                     facingMode: 'environment' // Try to use back camera on mobile
                 } 
@@ -45,16 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Show the video element with animation
             productWebcam.classList.remove('hidden');
             productWebcam.classList.add('fade-in');
-            
-            // Enable capture button with animation
-            captureProductImageBtn.disabled = false;
-            captureProductImageBtn.classList.add('pulse');
-            setTimeout(() => captureProductImageBtn.classList.remove('pulse'), 1000);
-            
-            // Update start camera button state
-            startProductCameraBtn.disabled = true;
-            startProductCameraBtn.classList.remove('pulse');
-            startProductCameraBtn.innerHTML = '<i class="fas fa-video-slash"></i> Camera On';
+            setTimeout(() => productWebcam.classList.remove('fade-in'), 500);
             
             // Hide the preview if it was shown
             if (!productImagePreview.classList.contains('hidden')) {
@@ -64,8 +60,29 @@ document.addEventListener('DOMContentLoaded', function() {
                     productImagePreview.classList.remove('fade-out');
                 }, 300);
             }
+            
+            // Enable capture button with animation
+            captureProductImageBtn.disabled = false;
+            captureProductImageBtn.classList.add('pulse');
+            setTimeout(() => captureProductImageBtn.classList.remove('pulse'), 1000);
+            
+            // Update start camera button
+            startProductCameraBtn.innerHTML = '<i class="fas fa-video-slash"></i> Stop Camera';
+            startProductCameraBtn.classList.remove('pulse');
+            
+            // Update camera status
+            cameraStatus.innerHTML = '<i class="fas fa-check-circle"></i> Camera ready';
+            setTimeout(() => {
+                cameraStatus.innerHTML = '<i class="fas fa-info-circle"></i> Click "Capture" to take photo';
+            }, 2000);
+            
         } catch (err) {
             console.error('Error accessing webcam:', err);
+            cameraStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Camera access failed';
+            setTimeout(() => {
+                cameraStatus.classList.remove('active');
+            }, 3000);
+            
             alert('Could not access webcam. Please ensure you have a webcam connected and have given permission to use it.');
             startProductCameraBtn.classList.remove('pulse');
         }
@@ -74,8 +91,28 @@ document.addEventListener('DOMContentLoaded', function() {
     captureProductImageBtn.addEventListener('click', function() {
         if (!productStream) return;
         
-        // Visual feedback on button click
+        // Visual feedback for capture button
         captureProductImageBtn.classList.add('pulse');
+        
+        // Add a "flash" effect
+        const flash = document.createElement('div');
+        flash.style.position = 'absolute';
+        flash.style.top = '0';
+        flash.style.left = '0';
+        flash.style.width = '100%';
+        flash.style.height = '100%';
+        flash.style.backgroundColor = 'white';
+        flash.style.opacity = '0.8';
+        flash.style.zIndex = '10';
+        flash.style.pointerEvents = 'none';
+        flash.style.transition = 'opacity 0.3s ease';
+        
+        document.querySelector('.webcam-container.product-webcam').appendChild(flash);
+        
+        setTimeout(() => {
+            flash.style.opacity = '0';
+            setTimeout(() => flash.remove(), 300);
+        }, 100);
         
         // Create canvas and capture image
         const canvas = document.createElement('canvas');
@@ -88,48 +125,29 @@ document.addEventListener('DOMContentLoaded', function() {
         // Convert to base64 image
         capturedProductImage = canvas.toDataURL('image/jpeg');
         
-        // Hide video first with fade out
+        // Hide video and show preview
         productWebcam.classList.add('fade-out');
         setTimeout(() => {
             productWebcam.classList.add('hidden');
             productWebcam.classList.remove('fade-out');
             
-            // Show preview with fade in
+            // Set preview image and show it
             productImagePreview.src = capturedProductImage;
             productImagePreview.classList.remove('hidden');
             productImagePreview.classList.add('fade-in');
+            setTimeout(() => productImagePreview.classList.remove('fade-in'), 500);
             
-            // Remove animation classes after transition
-            setTimeout(() => {
-                productImagePreview.classList.remove('fade-in');
-                captureProductImageBtn.classList.remove('pulse');
-            }, 500);
+            // Update camera status
+            cameraStatus.innerHTML = '<i class="fas fa-check-circle"></i> Image captured!';
+            
+            // Reset capture button
+            captureProductImageBtn.classList.remove('pulse');
+            captureProductImageBtn.disabled = true;
+            
+            // Change start camera button text
+            startProductCameraBtn.innerHTML = '<i class="fas fa-camera"></i> Take New Photo';
+            startProductCameraBtn.disabled = false;
         }, 300);
-        
-        // Display capture feedback message
-        const captureMsg = document.createElement('div');
-        captureMsg.className = 'capture-success';
-        captureMsg.innerHTML = '<i class="fas fa-check-circle"></i> Image captured successfully!';
-        captureMsg.style.position = 'absolute';
-        captureMsg.style.top = '10px';
-        captureMsg.style.left = '50%';
-        captureMsg.style.transform = 'translateX(-50%)';
-        captureMsg.style.backgroundColor = 'rgba(46, 204, 113, 0.9)';
-        captureMsg.style.color = 'white';
-        captureMsg.style.padding = '8px 16px';
-        captureMsg.style.borderRadius = '20px';
-        captureMsg.style.zIndex = '100';
-        captureMsg.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
-        captureMsg.style.transition = 'all 0.3s ease';
-        
-        const webcamContainer = document.querySelector('.webcam-container.product-webcam');
-        webcamContainer.style.position = 'relative';
-        webcamContainer.appendChild(captureMsg);
-        
-        setTimeout(() => {
-            captureMsg.style.opacity = '0';
-            setTimeout(() => captureMsg.remove(), 300);
-        }, 2000);
         
         // Stop webcam
         stopProductWebcam();
@@ -141,8 +159,9 @@ document.addEventListener('DOMContentLoaded', function() {
             productStream = null;
             productWebcam.srcObject = null;
             captureProductImageBtn.disabled = true;
-            startProductCameraBtn.disabled = false;
-            startProductCameraBtn.innerHTML = '<i class="fas fa-video"></i> Start Camera';
+            
+            // Don't reset start camera button disabled state here
+            // so it's handled in the capture click handler
         }
     }
 
@@ -214,10 +233,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 productImagePreview.classList.add('hidden');
                 capturedProductImage = null;
                 
+                // Reset camera status
+                cameraStatus.classList.remove('active');
+                
                 // Set default expiry date again
                 const defaultExpiryDate = new Date();
                 defaultExpiryDate.setDate(defaultExpiryDate.getDate() + 30);
                 document.getElementById('productExpiryDate').valueAsDate = defaultExpiryDate;
+                
+                // Reset start camera button
+                startProductCameraBtn.innerHTML = '<i class="fas fa-video"></i> Start Camera';
+                startProductCameraBtn.disabled = false;
             } else {
                 alert('Error adding product: ' + (data.message || 'Unknown error'));
             }
