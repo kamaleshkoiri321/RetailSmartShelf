@@ -15,12 +15,36 @@
                 <h1>RetailAI</h1>
             </div>
             <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
                 <li><a href="{{ url_for('login') }}">Login</a></li>
                 <li><a href="{{ url_for('detection') }}" class="active">Detection</a></li>
                 <li><a href="{{ url_for('inventory') }}">Inventory</a></li>
+                <li>
+                    <button class="theme-toggle" title="Toggle theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </li>
             </ul>
+            <button id="mobileMenuToggle" class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </nav>
+    
+    <!-- Mobile Navigation -->
+    <div id="mobileNav" class="mobile-nav">
+        <ul class="mobile-nav-links">
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('login') }}">Login</a></li>
+            <li><a href="{{ url_for('detection') }}" class="active">Detection</a></li>
+            <li><a href="{{ url_for('inventory') }}">Inventory</a></li>
+            <li>
+                <button class="mobile-theme-toggle">
+                    <i class="fas fa-moon"></i> Toggle Theme
+                </button>
+            </li>
+        </ul>
+    </div>
 
     <!-- Main Content -->
     <div class="container">
@@ -32,6 +56,7 @@
         <div class="detection-container">
             <div class="upload-section">
                 <div class="webcam-section">
+                    <h3>Capture Image</h3>
                     <div class="webcam-toggle-buttons">
                         <button id="startCameraBtn" class="btn secondary-btn">
                             <i class="fas fa-video"></i> Start Camera
@@ -70,6 +95,7 @@
                                 <th>Batch Number</th>
                                 <th>Expiry Date</th>
                                 <th>Quantity</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody id="detectionTableBody">
@@ -87,6 +113,8 @@
         </div>
     </div>
 
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/mobile-nav.js') }}"></script>
     <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
     <script src="{{ url_for('static', filename='js/navigation.js') }}"></script>
     <script src="{{ url_for('static', filename='js/detection.js') }}"></script>

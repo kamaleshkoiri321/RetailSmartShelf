@@ -20,9 +20,32 @@
                 <li><a href="#benefits" class="nav-scroll">Benefits</a></li>
                 <li><a href="{{ url_for('login') }}">Login</a></li>
                 <li><a href="{{ url_for('register') }}">Register</a></li>
+                <li>
+                    <button class="theme-toggle" title="Toggle theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </li>
             </ul>
+            <button id="mobileMenuToggle" class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </nav>
+    
+    <!-- Mobile Navigation -->
+    <div id="mobileNav" class="mobile-nav">
+        <ul class="mobile-nav-links">
+            <li><a href="#features" class="nav-scroll">Features</a></li>
+            <li><a href="#benefits" class="nav-scroll">Benefits</a></li>
+            <li><a href="{{ url_for('login') }}">Login</a></li>
+            <li><a href="{{ url_for('register') }}">Register</a></li>
+            <li>
+                <button class="mobile-theme-toggle">
+                    <i class="fas fa-moon"></i> Toggle Theme
+                </button>
+            </li>
+        </ul>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -32,7 +55,7 @@
                 <p>Advanced retail shelf monitoring system with AI-powered product detection and expiry tracking</p>
                 <div class="hero-buttons">
                     <a href="{{ url_for('register') }}" class="btn primary-btn">Get Started</a>
-                    <a href="#features" class="btn secondary-btn">Learn More</a>
+                    <a href="#features" class="btn secondary-btn nav-scroll">Learn More</a>
                 </div>
             </div>
             <div class="hero-image">
@@ -157,6 +180,8 @@
         </div>
     </footer>
 
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/mobile-nav.js') }}"></script>
     <script>
         // Smooth scrolling for navigation links
         document.querySelectorAll('.nav-scroll').forEach(anchor => {
@@ -170,6 +195,14 @@
                     top: targetElement.offsetTop - 70,
                     behavior: 'smooth'
                 });
+                
+                // Close mobile menu if open
+                const mobileNav = document.getElementById('mobileNav');
+                const navToggle = document.getElementById('mobileMenuToggle');
+                if (mobileNav && mobileNav.classList.contains('active')) {
+                    mobileNav.classList.remove('active');
+                    navToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                }
             });
         });
     </script>
