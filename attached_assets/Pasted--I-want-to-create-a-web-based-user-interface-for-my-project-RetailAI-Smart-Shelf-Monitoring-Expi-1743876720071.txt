@@ -1,0 +1,25 @@
+"I want to create a web-based user interface for my project 'RetailAI: Smart Shelf Monitoring & Expiry Tracking System' using only pure HTML, CSS, and JavaScript—no frameworks like React or Streamlit. The UI should be dynamic, visually appealing, and professional, comparable to a modern React-based design, with smooth animations, responsive layouts, and an intuitive user experience. It should consist of three main pages:
+
+Login Page:
+A form with fields for email/phone and password, styled with a modern gradient background and a card-like container.
+A 'Login' button that simulates authentication (mock logic: if fields are filled, proceed to the detection page).
+A 'Login with Google' button for mock Google authentication.
+Input validation with real-time feedback (e.g., error messages if fields are empty).
+Image Detection Dashboard:
+An input field to upload an image of a retail shelf, displaying a preview of the uploaded image.
+A 'Detect Products' button that populates a table with mock product data (e.g., Milk: batch A123, expiry 2025-04-15, quantity 10; Bread: batch B456, expiry 2025-04-10, quantity 5; Eggs: batch C789, expiry 2025-04-05, quantity 20).
+A styled table showing product name, batch, expiry date, and quantity, with hover effects and a clean design.
+Placeholder code for future integration with my friend’s detection API (e.g., a commented fetch request).
+Inventory Dashboard:
+A table displaying the detected products with columns for name, batch, expiry date, quantity, status (Expired, Near Expiry, Good), and discount suggestion (e.g., 50% off if ≤3 days, 20% off if ≤7 days, none otherwise).
+Dynamic row styling: red background for Expired, yellow for Near Expiry, green for Good.
+An alerts section below the table listing items with ≤7 days left, styled as warning cards.
+Data should persist from the detection page (mock data for now).
+Additional Requirements:
+
+A fixed navigation bar at the top with links to 'Login', 'Detection', and 'Inventory', styled with a sleek, modern look (e.g., blue background, white text, hover effects). Navigation should be disabled until login is completed.
+The overall design should use a consistent color scheme (e.g., blue gradients like #0277bd to #e0f7fa), shadow effects, and rounded corners for a polished appearance.
+Buttons should have hover animations (e.g., scale or color change), and the UI should be responsive for desktop and mobile views.
+The code should be simple, well-commented, and easy to modify, avoiding the complexity of React or other frameworks.
+Include mock data from my PDF (Milk, Bread, Eggs) and prepare the detection dashboard for future API integration without implementing it now.
+The goal is to create a standalone frontend that looks professional and dynamic, aligning with my project’s objectives of real-time inventory tracking and expiry management, while being manageable for someone who finds React challenging."
