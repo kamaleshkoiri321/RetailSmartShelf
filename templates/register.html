@@ -20,11 +20,6 @@
                 <li><a href="{{ url_for('register') }}" class="active">Register</a></li>
                 <li><a href="{{ url_for('detection') }}" class="disabled">Detection</a></li>
                 <li><a href="{{ url_for('inventory') }}" class="disabled">Inventory</a></li>
-                <li>
-                    <button class="theme-toggle" title="Toggle theme">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                </li>
             </ul>
             <button id="mobileMenuToggle" class="mobile-menu-toggle">
                 <i class="fas fa-bars"></i>
@@ -40,11 +35,6 @@
             <li><a href="{{ url_for('register') }}" class="active">Register</a></li>
             <li><a href="{{ url_for('detection') }}" class="disabled">Detection</a></li>
             <li><a href="{{ url_for('inventory') }}" class="disabled">Inventory</a></li>
-            <li>
-                <button class="mobile-theme-toggle">
-                    <i class="fas fa-moon"></i> Toggle Theme
-                </button>
-            </li>
         </ul>
     </div>
 
@@ -93,6 +83,14 @@
                     </div>
                     
                     <button type="submit" class="btn primary-btn">Create Account</button>
+                    
+                    <div class="divider">
+                        <span>OR</span>
+                    </div>
+                    
+                    <button type="button" class="btn google-btn">
+                        <i class="fab fa-google"></i> Register with Google
+                    </button>
                     
                     <div class="login-link">
                         Already have an account? <a href="{{ url_for('login') }}">Login here</a>

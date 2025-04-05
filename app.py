@@ -9,13 +9,9 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev_secret_key")
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
-# Configure the database for SQLite
-# If using DATABASE_URL, we'll use it, otherwise create a SQLite database
-if os.environ.get("DATABASE_URL"):
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
-else:
-    # For local development, use SQLite
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///retailai.db"
+# Configure the database connection using PostgreSQL
+# Use the DATABASE_URL environment variable from Replit
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
 
 # Additional database config
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
