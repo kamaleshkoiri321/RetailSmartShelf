@@ -91,6 +91,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
+    # Force a redirect to login page to clear localStorage
     return redirect(url_for('login'))
 
 @app.route('/detection', methods=['GET', 'POST'])

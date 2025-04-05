@@ -35,6 +35,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    // Set login status in localStorage
+                    localStorage.setItem('isLoggedIn', 'true');
+                    // Enable navigation
+                    enableNavigation();
                     // Redirect to detection page
                     window.location.href = '/detection';
                 } else {
