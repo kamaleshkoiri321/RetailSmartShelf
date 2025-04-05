@@ -6,29 +6,53 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // Check if there are detected products
-    const savedProducts = localStorage.getItem('detectedProducts');
-    if (!savedProducts) {
-        // No products detected yet, redirect to detection page
-        alert('No products detected yet. Please upload an image first.');
-        window.location.href = '/detection';
-        return;
-    }
-
     // Elements
     const inventoryTableBody = document.getElementById('inventoryTableBody');
     const alertsContainer = document.getElementById('alertsContainer');
     const backToDetectionBtn = document.getElementById('backToDetectionBtn');
 
-    // Load products from localStorage
-    const products = JSON.parse(savedProducts);
+    // Fetch latest detection data from server
+    fetch('/api/detections')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.detection && data.detection.products && data.detection.products.length > 0) {
+                const products = data.detection.products;
+                
+                // Display inventory with status and discount suggestions
+                displayInventory(products);
+                
+                // Display alerts for expiring products
+                displayAlerts(products);
+            } else {
+                // Check if there are detected products in localStorage as a fallback
+                const savedProducts = localStorage.getItem('detectedProducts');
+                if (savedProducts) {
+                    const products = JSON.parse(savedProducts);
+                    displayInventory(products);
+                    displayAlerts(products);
+                } else {
+                    // No products detected yet, redirect to detection page
+                    alert('No products detected yet. Please upload an image first.');
+                    window.location.href = '/detection';
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching detections:', error);
+            
+            // Check localStorage as fallback
+            const savedProducts = localStorage.getItem('detectedProducts');
+            if (savedProducts) {
+                const products = JSON.parse(savedProducts);
+                displayInventory(products);
+                displayAlerts(products);
+            } else {
+                // No products detected yet, redirect to detection page
+                alert('No products detected yet. Please upload an image first.');
+                window.location.href = '/detection';
+            }
+        });
     
-    // Display inventory with status and discount suggestions
-    displayInventory(products);
-    
-    // Display alerts for expiring products
-    displayAlerts(products);
-
     // Back to detection button
     backToDetectionBtn.addEventListener('click', function() {
         window.location.href = '/detection';
@@ -39,31 +63,30 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clear existing rows
         inventoryTableBody.innerHTML = '';
         
-        // Current date for comparison
-        const currentDate = new Date();
-        
         // Add product rows with status and discount
         products.forEach(product => {
-            const expiryDate = new Date(product.expiry);
-            const daysUntilExpiry = getDaysDifference(currentDate, expiryDate);
+            // Get days until expiry, either from API or calculate
+            let daysUntilExpiry = product.days_until_expiry;
+            if (daysUntilExpiry === undefined) {
+                const currentDate = new Date();
+                const expiryDate = new Date(product.expiry_date || product.expiry);
+                daysUntilExpiry = getDaysDifference(currentDate, expiryDate);
+            }
             
             // Determine status
             let status = '';
             let statusClass = '';
             let discountSuggestion = '';
             
-            if (daysUntilExpiry < 0) {
+            // Use API provided values if available, otherwise calculate
+            if (product.is_expired) {
                 status = 'Expired';
                 statusClass = 'status-expired';
                 discountSuggestion = 'Remove from shelf';
-            } else if (daysUntilExpiry <= 3) {
+            } else if (product.is_expiring_soon || daysUntilExpiry <= 7) {
                 status = 'Near Expiry';
                 statusClass = 'status-near-expiry';
-                discountSuggestion = '50% off';
-            } else if (daysUntilExpiry <= 7) {
-                status = 'Near Expiry';
-                statusClass = 'status-near-expiry';
-                discountSuggestion = '20% off';
+                discountSuggestion = daysUntilExpiry <= 3 ? '50% off' : '20% off';
             } else {
                 status = 'Good';
                 statusClass = 'status-good';
@@ -76,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
             row.innerHTML = `
                 <td>${product.name}</td>
                 <td>${product.batch}</td>
-                <td>${product.expiry}</td>
+                <td>${formatDate(product.expiry_date || product.expiry)}</td>
                 <td>${product.quantity}</td>
                 <td><span class="status-badge ${statusClass}">${status}</span></td>
                 <td>${discountSuggestion}</td>
@@ -91,14 +114,21 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clear existing alerts
         alertsContainer.innerHTML = '';
         
-        // Current date for comparison
-        const currentDate = new Date();
-        
         // Filter products that are expired or expiring within 7 days
         const alertProducts = products.filter(product => {
-            const expiryDate = new Date(product.expiry);
-            const daysUntilExpiry = getDaysDifference(currentDate, expiryDate);
-            return daysUntilExpiry <= 7;
+            if (product.is_expired || product.is_expiring_soon) {
+                return true;
+            }
+            
+            // Calculate if not provided by API
+            if (product.days_until_expiry !== undefined) {
+                return product.days_until_expiry <= 7;
+            } else {
+                const currentDate = new Date();
+                const expiryDate = new Date(product.expiry_date || product.expiry);
+                const daysUntilExpiry = getDaysDifference(currentDate, expiryDate);
+                return daysUntilExpiry <= 7;
+            }
         });
         
         // No alerts if no products are expiring soon
@@ -109,13 +139,17 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Add alert card for each expiring product
         alertProducts.forEach(product => {
-            const expiryDate = new Date(product.expiry);
-            const daysUntilExpiry = getDaysDifference(currentDate, expiryDate);
+            let daysUntilExpiry = product.days_until_expiry;
+            if (daysUntilExpiry === undefined) {
+                const currentDate = new Date();
+                const expiryDate = new Date(product.expiry_date || product.expiry);
+                daysUntilExpiry = getDaysDifference(currentDate, expiryDate);
+            }
             
             const alertCard = document.createElement('div');
             
             // Determine alert type
-            if (daysUntilExpiry < 0) {
+            if (product.is_expired || daysUntilExpiry < 0) {
                 alertCard.className = 'alert-card expired';
                 alertCard.innerHTML = `
                     <h4><i class="fas fa-exclamation-circle"></i> Expired Product</h4>
@@ -135,5 +169,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             alertsContainer.appendChild(alertCard);
         });
+    }
+
+    // Helper function to format a date
+    function formatDate(dateString) {
+        if (!dateString) return '';
+        return new Date(dateString).toLocaleDateString();
     }
 });

@@ -1,11 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if user is already logged in
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    if (isLoggedIn === 'true') {
-        window.location.href = '/detection';
-        return;
-    }
-
     const loginForm = document.getElementById('loginForm');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
@@ -28,27 +21,70 @@ document.addEventListener('DOMContentLoaded', function() {
         const isPasswordValid = validatePassword();
         
         if (isEmailValid && isPasswordValid) {
-            // Simulate successful login
-            localStorage.setItem('isLoggedIn', 'true');
-            
-            // Enable navigation
-            enableNavigation();
-            
-            // Redirect to detection page
-            window.location.href = '/detection';
+            // Send login request to server
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: emailInput.value.trim(),
+                    password: passwordInput.value.trim()
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Store login state for frontend use
+                    localStorage.setItem('isLoggedIn', 'true');
+                    
+                    // Enable navigation
+                    enableNavigation();
+                    
+                    // Redirect to detection page
+                    window.location.href = '/detection';
+                } else {
+                    // Show error message
+                    passwordError.textContent = data.message || 'Login failed';
+                }
+            })
+            .catch(error => {
+                console.error('Login error:', error);
+                passwordError.textContent = 'An error occurred during login. Please try again.';
+            });
         }
     });
 
-    // Handle Google login
+    // Handle Google login (mock for demo)
     googleBtn.addEventListener('click', function() {
-        // Simulate Google login
-        localStorage.setItem('isLoggedIn', 'true');
-        
-        // Enable navigation
-        enableNavigation();
-        
-        // Redirect to detection page
-        window.location.href = '/detection';
+        // For demo, we'll use a dummy Google account
+        fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: 'google_user@example.com',
+                password: generateRandomString(12)
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Store login state
+                localStorage.setItem('isLoggedIn', 'true');
+                
+                // Enable navigation
+                enableNavigation();
+                
+                // Redirect to detection page
+                window.location.href = '/detection';
+            }
+        })
+        .catch(error => {
+            console.error('Google login error:', error);
+            passwordError.textContent = 'An error occurred during Google login. Please try again.';
+        });
     });
 
     // Email validation function

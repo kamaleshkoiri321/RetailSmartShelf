@@ -66,36 +66,47 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Product detection
     detectButton.addEventListener('click', function() {
-        // Mock product detection (in a real app, this would call an API)
-        const detectedProducts = [
-            {
-                name: 'Milk',
-                batch: 'A123',
-                expiry: '2025-04-15',
-                quantity: 10
+        // Set button to loading state
+        detectButton.disabled = true;
+        detectButton.textContent = 'Detecting...';
+        
+        // Call the backend API to save the detection
+        fetch('/detection', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
             },
-            {
-                name: 'Bread',
-                batch: 'B456',
-                expiry: '2025-04-10',
-                quantity: 5
-            },
-            {
-                name: 'Eggs',
-                batch: 'C789',
-                expiry: '2025-04-05',
-                quantity: 20
+            body: JSON.stringify({
+                image_data: imagePreview.src  // In a real app, you might send the actual image file
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Get products from the detection
+                const detectedProducts = data.detection.products;
+                
+                // Save to localStorage for inventory page (optional, since we also store in DB)
+                localStorage.setItem('detectedProducts', JSON.stringify(detectedProducts));
+                
+                // Display results
+                displayDetectionResults(detectedProducts);
+                
+                // Show results section
+                resultsSection.classList.remove('hidden');
+            } else {
+                alert('Error detecting products: ' + (data.message || 'Unknown error'));
             }
-        ];
-        
-        // Save to localStorage for inventory page
-        localStorage.setItem('detectedProducts', JSON.stringify(detectedProducts));
-        
-        // Display results
-        displayDetectionResults(detectedProducts);
-        
-        // Show results section
-        resultsSection.classList.remove('hidden');
+        })
+        .catch(error => {
+            console.error('Detection error:', error);
+            alert('Failed to process detection. Please try again.');
+        })
+        .finally(() => {
+            // Reset button state
+            detectButton.disabled = false;
+            detectButton.textContent = 'Detect Products';
+        });
     });
 
     // Display detection results in table
@@ -110,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
             row.innerHTML = `
                 <td>${product.name}</td>
                 <td>${product.batch}</td>
-                <td>${product.expiry}</td>
+                <td>${formatDate(product.expiry_date)}</td>
                 <td>${product.quantity}</td>
             `;
             
@@ -123,38 +134,37 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = '/inventory';
     });
 
-    // Check if there are already detected products to display
-    const savedProducts = localStorage.getItem('detectedProducts');
-    if (savedProducts) {
-        const products = JSON.parse(savedProducts);
-        displayDetectionResults(products);
-        resultsSection.classList.remove('hidden');
-    }
-
-    // In a real application, the detection would call an API endpoint
-    // Future API integration placeholder:
-    /*
-    async function detectProductsFromAPI(imageData) {
-        try {
-            const response = await fetch('https://api.example.com/detect', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ image: imageData })
-            });
-            
-            if (!response.ok) {
-                throw new Error('API request failed');
+    // Check for already detected products
+    fetch('/api/detections')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.detection && data.detection.products && data.detection.products.length > 0) {
+                const products = data.detection.products;
+                
+                // Save to localStorage for inventory page
+                localStorage.setItem('detectedProducts', JSON.stringify(products));
+                
+                // Display results
+                displayDetectionResults(products);
+                
+                // Show results section
+                resultsSection.classList.remove('hidden');
             }
-            
-            const data = await response.json();
-            return data.products;
-        } catch (error) {
-            console.error('Error calling detection API:', error);
-            alert('Failed to detect products. Please try again.');
-            return null;
-        }
+        })
+        .catch(error => {
+            console.error('Error fetching detections:', error);
+            // If API fails, check localStorage as fallback
+            const savedProducts = localStorage.getItem('detectedProducts');
+            if (savedProducts) {
+                const products = JSON.parse(savedProducts);
+                displayDetectionResults(products);
+                resultsSection.classList.remove('hidden');
+            }
+        });
+
+    // Helper function to format a date
+    function formatDate(dateString) {
+        if (!dateString) return '';
+        return new Date(dateString).toLocaleDateString();
     }
-    */
 });
