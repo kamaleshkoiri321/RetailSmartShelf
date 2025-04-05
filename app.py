@@ -44,20 +44,26 @@ def register():
         email = data.get('email')
         password = data.get('password')
         
-        # Check if email already exists
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
-            return jsonify({'success': False, 'message': 'Email already registered'}), 400
-        
-        # Create new user
-        user = User(name=name, email=email)
-        user.set_password(password)
-        db.session.add(user)
-        db.session.commit()
-        
-        # Log the user in
-        session['user_id'] = user.id
+        # For frontend development, always register successfully
+        # Set a fake user ID for session
+        session['user_id'] = 1
         return jsonify({'success': True}), 201
+        
+        # Regular registration process (commented out for now)
+        # # Check if email already exists
+        # existing_user = User.query.filter_by(email=email).first()
+        # if existing_user:
+        #     return jsonify({'success': False, 'message': 'Email already registered'}), 400
+        # 
+        # # Create new user
+        # user = User(username=name, email=email)
+        # user.set_password(password)
+        # db.session.add(user)
+        # db.session.commit()
+        # 
+        # # Log the user in
+        # session['user_id'] = user.id
+        # return jsonify({'success': True}), 201
     
     return render_template('register.html')
 
@@ -68,14 +74,17 @@ def login():
         email = data.get('email')
         password = data.get('password')
         
-        user = User.query.filter_by(email=email).first()
+        # For frontend development, accept any credentials
+        # Use a fake user ID 
+        session['user_id'] = 1
+        return jsonify({'success': True}), 200
         
-        # Check password
-        if user and user.check_password(password):
-            session['user_id'] = user.id
-            return jsonify({'success': True}), 200
-        
-        return jsonify({'success': False, 'message': 'Invalid credentials'}), 401
+        # Regular authentication (commented out for now)
+        # user = User.query.filter_by(email=email).first()
+        # if user and user.check_password(password):
+        #     session['user_id'] = user.id
+        #     return jsonify({'success': True}), 200
+        # return jsonify({'success': False, 'message': 'Invalid credentials'}), 401
     
     return render_template('login.html')
 
@@ -86,149 +95,197 @@ def logout():
 
 @app.route('/detection', methods=['GET', 'POST'])
 def detection():
-    # Check if user is logged in
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
+    # For frontend development, let's skip authentication check
+    # if 'user_id' not in session:
+    #     return redirect(url_for('login'))
         
     if request.method == 'POST':
-        # Handle product detection API
-        user_id = session.get('user_id')
+        # Handle product detection API (without DB interaction)
         data = request.get_json()
         
-        # Create a new detection
-        detection = Detection(user_id=user_id)
+        # Demo detection data for frontend testing
+        detection_response = {
+            'id': 1,
+            'image_path': data.get('image_data') if data and 'image_data' in data else None,
+            'detected_at': datetime.datetime.now().isoformat(),
+            'products': [
+                {
+                    'id': 1,
+                    'name': 'Milk',
+                    'batch': 'A123',
+                    'expiry_date': '2025-04-15',
+                    'quantity': 10,
+                    'days_until_expiry': 10,
+                    'is_expired': False,
+                    'is_expiring_soon': False,
+                    'created_at': '2025-04-01T00:00:00',
+                    'product_image': None
+                },
+                {
+                    'id': 2,
+                    'name': 'Bread',
+                    'batch': 'B456',
+                    'expiry_date': '2025-04-08',
+                    'quantity': 5,
+                    'days_until_expiry': 3,
+                    'is_expired': False,
+                    'is_expiring_soon': True,
+                    'created_at': '2025-04-02T00:00:00',
+                    'product_image': None
+                },
+                {
+                    'id': 3,
+                    'name': 'Eggs',
+                    'batch': 'C789',
+                    'expiry_date': '2025-04-02',
+                    'quantity': 20,
+                    'days_until_expiry': -3,
+                    'is_expired': True,
+                    'is_expiring_soon': False,
+                    'created_at': '2025-04-03T00:00:00',
+                    'product_image': None
+                }
+            ]
+        }
         
-        # Save image if provided
-        if data and 'image_data' in data:
-            detection.image_path = data['image_data']  # In a real app, you might save the file to disk instead
-        
-        db.session.add(detection)
-        db.session.flush()  # Get the detection ID
-        
-        # Mock product data - in a real app, this would come from the detection API
-        mock_products = [
-            {
-                'name': 'Milk',
-                'batch': 'A123',
-                'expiry': '2025-04-15',
-                'quantity': 10
-            },
-            {
-                'name': 'Bread',
-                'batch': 'B456',
-                'expiry': '2025-04-10',
-                'quantity': 5
-            },
-            {
-                'name': 'Eggs',
-                'batch': 'C789',
-                'expiry': '2025-04-05',
-                'quantity': 20
-            }
-        ]
-        
-        # Add products to database
-        for product_data in mock_products:
-            product = Product(
-                name=product_data['name'],
-                batch=product_data['batch'],
-                expiry_date=datetime.datetime.strptime(product_data['expiry'], '%Y-%m-%d').date(),
-                quantity=product_data['quantity'],
-                detection_id=detection.id
-            )
-            db.session.add(product)
-        
-        db.session.commit()
-        
-        # Return the data
+        # Return the demo data
         return jsonify({
             'success': True,
-            'detection': detection.to_dict()
+            'detection': detection_response
         }), 200
     
     return render_template('detection.html')
 
 @app.route('/api/detections', methods=['GET'])
 def get_detections():
-    user_id = session.get('user_id')
-    if not user_id:
-        return jsonify({'success': False, 'message': 'Not logged in'}), 401
+    # For frontend development, let's skip authentication check
+    # user_id = session.get('user_id')
+    # if not user_id:
+    #     return jsonify({'success': False, 'message': 'Not logged in'}), 401
     
-    # Get the latest detection for this user
-    detection = Detection.query.filter_by(user_id=user_id).order_by(Detection.detected_at.desc()).first()
-    
-    if not detection:
-        return jsonify({'success': False, 'message': 'No detections found'}), 404
+    # Demo detection data for frontend testing
+    detection = {
+        'id': 1,
+        'image_path': None, # Could be a base64 image data URL for testing
+        'detected_at': datetime.datetime.now().isoformat(),
+        'products': [
+            {
+                'id': 1,
+                'name': 'Milk',
+                'batch': 'A123',
+                'expiry_date': '2025-04-15',
+                'quantity': 10,
+                'days_until_expiry': 10,
+                'is_expired': False,
+                'is_expiring_soon': False,
+                'created_at': '2025-04-01T00:00:00',
+                'product_image': None
+            },
+            {
+                'id': 2,
+                'name': 'Bread',
+                'batch': 'B456',
+                'expiry_date': '2025-04-08',
+                'quantity': 5,
+                'days_until_expiry': 3,
+                'is_expired': False,
+                'is_expiring_soon': True,
+                'created_at': '2025-04-02T00:00:00',
+                'product_image': None
+            },
+            {
+                'id': 3,
+                'name': 'Eggs',
+                'batch': 'C789',
+                'expiry_date': '2025-04-02',
+                'quantity': 20,
+                'days_until_expiry': -3,
+                'is_expired': True,
+                'is_expiring_soon': False,
+                'created_at': '2025-04-03T00:00:00',
+                'product_image': None
+            }
+        ]
+    }
     
     return jsonify({
         'success': True,
-        'detection': detection.to_dict()
+        'detection': detection
     }), 200
 
 @app.route('/api/products', methods=['GET', 'POST'])
 def api_products():
-    user_id = session.get('user_id')
-    if not user_id:
-        return jsonify({'success': False, 'message': 'Not logged in'}), 401
-    
+    # For frontend development, let's use demo data instead of database
     if request.method == 'POST':
-        # Add new product
         data = request.get_json()
         
-        # Create a new detection for this product
-        detection = Detection(user_id=user_id)
-        db.session.add(detection)
-        db.session.flush()  # Get the detection ID
-        
-        # Create the product
-        try:
-            product = Product(
-                name=data.get('name'),
-                batch=data.get('batch'),
-                expiry_date=datetime.datetime.strptime(data.get('expiry_date'), '%Y-%m-%d').date(),
-                quantity=data.get('quantity', 0),
-                detection_id=detection.id,
-                product_image=data.get('product_image')  # Store the base64 image
-            )
-            db.session.add(product)
-            db.session.commit()
-            
-            return jsonify({
-                'success': True,
-                'product': product.to_dict()
-            }), 201
-        except Exception as e:
-            db.session.rollback()
-            return jsonify({
-                'success': False, 
-                'message': str(e)
-            }), 400
-    
-    # GET method - fetch all products
-    try:
-        # Get all detections for this user
-        detections = Detection.query.filter_by(user_id=user_id).all()
-        
-        # Collect all products from these detections
-        all_products = []
-        for detection in detections:
-            all_products.extend(detection.products)
-        
+        # Just return success with the posted data for frontend testing
         return jsonify({
             'success': True,
-            'products': [product.to_dict() for product in all_products]
-        }), 200
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'message': str(e)
-        }), 500
+            'product': {
+                'id': 1001,
+                'name': data.get('name', 'New Product'),
+                'batch': data.get('batch', 'BATCH-001'),
+                'expiry_date': data.get('expiry_date', '2025-04-30'),
+                'quantity': data.get('quantity', 1),
+                'days_until_expiry': 25,
+                'is_expired': False,
+                'is_expiring_soon': False,
+                'created_at': datetime.datetime.now().isoformat(),
+                'product_image': data.get('product_image')
+            }
+        }), 201
+    
+    # GET method - return demo product data for frontend development
+    demo_products = [
+        {
+            'id': 1,
+            'name': 'Milk',
+            'batch': 'A123',
+            'expiry_date': '2025-04-15',
+            'quantity': 10,
+            'days_until_expiry': 10,
+            'is_expired': False,
+            'is_expiring_soon': False,
+            'created_at': '2025-04-01T00:00:00',
+            'product_image': None
+        },
+        {
+            'id': 2,
+            'name': 'Bread',
+            'batch': 'B456',
+            'expiry_date': '2025-04-08',
+            'quantity': 5,
+            'days_until_expiry': 3,
+            'is_expired': False,
+            'is_expiring_soon': True,
+            'created_at': '2025-04-02T00:00:00',
+            'product_image': None
+        },
+        {
+            'id': 3,
+            'name': 'Eggs',
+            'batch': 'C789',
+            'expiry_date': '2025-04-02',
+            'quantity': 20,
+            'days_until_expiry': -3,
+            'is_expired': True,
+            'is_expiring_soon': False,
+            'created_at': '2025-04-03T00:00:00',
+            'product_image': None
+        }
+    ]
+    
+    return jsonify({
+        'success': True,
+        'products': demo_products
+    }), 200
 
 @app.route('/inventory')
 def inventory():
-    # Check if user is logged in
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
+    # For frontend development, let's skip authentication check
+    # if 'user_id' not in session:
+    #     return redirect(url_for('login'))
         
     return render_template('inventory.html')
 
