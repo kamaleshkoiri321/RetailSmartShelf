@@ -266,6 +266,24 @@ body {
     font-size: 0.9rem;
 }
 
+.login-link, .register-link {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.login-link a, .register-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.login-link a:hover, .register-link a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
 /* Common Page Styles */
 .page-header {
     text-align: center;
@@ -718,4 +736,23 @@ tr.good {
     width: 100%;
     max-height: 80vh;
     object-fit: contain;
+}
+
+/* Registration Styles */
+.login-link, .register-link {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.login-link a, .register-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.login-link a:hover, .register-link a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
 }

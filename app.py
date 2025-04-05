@@ -36,6 +36,31 @@ with app.app_context():
 def index():
     return redirect(url_for('login'))
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        data = request.get_json()
+        name = data.get('name')
+        email = data.get('email')
+        password = data.get('password')
+        
+        # Check if email already exists
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            return jsonify({'success': False, 'message': 'Email already registered'}), 400
+        
+        # Create new user
+        user = User(name=name, email=email)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        
+        # Log the user in
+        session['user_id'] = user.id
+        return jsonify({'success': True}), 201
+    
+    return render_template('register.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -45,13 +70,6 @@ def login():
         
         user = User.query.filter_by(email=email).first()
         
-        # For demo purposes, create a user if it doesn't exist
-        if not user:
-            user = User(email=email)
-            user.set_password(password)
-            db.session.add(user)
-            db.session.commit()
-            
         # Check password
         if user and user.check_password(password):
             session['user_id'] = user.id
