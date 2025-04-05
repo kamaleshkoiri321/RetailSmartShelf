@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetailAI - Detection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="detection-page">
+    <!-- Navigation Bar -->
+    <nav id="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>RetailAI</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+                <li><a href="{{ url_for('detection') }}" class="active">Detection</a></li>
+                <li><a href="{{ url_for('inventory') }}">Inventory</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-header">
+            <h2>Image Detection Dashboard</h2>
+            <p>Upload an image of a retail shelf to detect products</p>
+        </div>
+        
+        <div class="detection-container">
+            <div class="upload-section">
+                <div class="image-uploader" id="imageDropArea">
+                    <div class="upload-instructions" id="uploadInstructions">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & drop an image here or click to browse</p>
+                    </div>
+                    <img id="imagePreview" class="image-preview hidden">
+                    <input type="file" id="imageInput" accept="image/*" class="file-input">
+                </div>
+                
+                <button id="detectButton" class="btn primary-btn" disabled>
+                    <i class="fas fa-search"></i> Detect Products
+                </button>
+            </div>
+            
+            <div class="results-section hidden" id="resultsSection">
+                <h3>Detection Results</h3>
+                <div class="table-container">
+                    <table id="detectionTable">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Batch Number</th>
+                                <th>Expiry Date</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detectionTableBody">
+                            <!-- Results will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="action-buttons">
+                    <button id="viewInventoryBtn" class="btn secondary-btn">
+                        <i class="fas fa-clipboard-list"></i> View Inventory
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/navigation.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/detection.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetailAI - Inventory</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="inventory-page">
+    <!-- Navigation Bar -->
+    <nav id="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>RetailAI</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+                <li><a href="{{ url_for('detection') }}">Detection</a></li>
+                <li><a href="{{ url_for('inventory') }}" class="active">Inventory</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-header">
+            <h2>Inventory Dashboard</h2>
+            <p>Monitor products, expiry dates, and stock levels</p>
+        </div>
+        
+        <div class="inventory-container">
+            <div class="inventory-section">
+                <h3>Product Inventory</h3>
+                <div class="table-container">
+                    <table id="inventoryTable">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Batch Number</th>
+                                <th>Expiry Date</th>
+                                <th>Quantity</th>
+                                <th>Status</th>
+                                <th>Discount Suggestion</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTableBody">
+                            <!-- Inventory data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="alerts-section">
+                <h3>Alerts & Notifications</h3>
+                <div id="alertsContainer" class="alerts-container">
+                    <!-- Alerts will be populated here -->
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button id="backToDetectionBtn" class="btn secondary-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Detection
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/navigation.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/inventory.js') }}"></script>
+</body>
+</html>
