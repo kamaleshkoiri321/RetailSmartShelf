@@ -1,30 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Check login status
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    
     // Get navigation links
     const navLinks = document.querySelectorAll('.nav-links a');
     
-    // If user is logged in, enable navigation
-    if (isLoggedIn) {
+    // Check if we're on a protected page
+    const currentPage = window.location.pathname;
+    if (currentPage === '/detection' || currentPage === '/inventory') {
+        // We're on a protected page, so the user must be logged in (server would redirect otherwise)
         enableNavigation();
-    } else {
-        // If on pages other than login and not logged in, redirect to login
-        const currentPage = window.location.pathname;
-        if (currentPage !== '/' && currentPage !== '/login') {
-            window.location.href = '/login';
-        }
     }
-
-    // Handle logout (clicking on Login when already logged in)
+    
+    // Handle logout - direct to /logout route when clicking login while on protected pages
     const loginLink = document.querySelector('.nav-links a[href="/login"]');
-    if (loginLink && isLoggedIn) {
+    if (loginLink && (currentPage === '/detection' || currentPage === '/inventory')) {
+        loginLink.href = '/logout';
+        loginLink.textContent = 'Logout';
+        
         loginLink.addEventListener('click', function(e) {
-            if (confirm('Are you sure you want to log out?')) {
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('detectedProducts');
-                return true;
-            } else {
+            if (!confirm('Are you sure you want to log out?')) {
                 e.preventDefault();
                 return false;
             }

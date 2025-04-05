@@ -86,6 +86,10 @@ def logout():
 
 @app.route('/detection', methods=['GET', 'POST'])
 def detection():
+    # Check if user is logged in
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+        
     if request.method == 'POST':
         # Handle product detection API
         user_id = session.get('user_id')
@@ -222,6 +226,10 @@ def api_products():
 
 @app.route('/inventory')
 def inventory():
+    # Check if user is logged in
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+        
     return render_template('inventory.html')
 
 if __name__ == '__main__':

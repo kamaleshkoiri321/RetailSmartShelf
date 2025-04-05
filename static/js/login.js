@@ -35,12 +35,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Store login state for frontend use
-                    localStorage.setItem('isLoggedIn', 'true');
-                    
-                    // Enable navigation
-                    enableNavigation();
-                    
                     // Redirect to detection page
                     window.location.href = '/detection';
                 } else {
@@ -57,34 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle Google login (mock for demo)
     googleBtn.addEventListener('click', function() {
-        // For demo, we'll use a dummy Google account
-        fetch('/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: 'google_user@example.com',
-                password: generateRandomString(12)
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Store login state
-                localStorage.setItem('isLoggedIn', 'true');
-                
-                // Enable navigation
-                enableNavigation();
-                
-                // Redirect to detection page
-                window.location.href = '/detection';
-            }
-        })
-        .catch(error => {
-            console.error('Google login error:', error);
-            passwordError.textContent = 'An error occurred during Google login. Please try again.';
-        });
+        passwordError.textContent = 'Google login is not implemented in this demo.';
     });
 
     // Email validation function
