@@ -297,6 +297,7 @@ body {
     padding: 2.5rem;
     transform: translateY(0);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 0 auto; /* Center the card */
 }
 
 .login-card:hover {
@@ -334,15 +335,19 @@ body {
 
 .input-with-icon i {
     position: absolute;
-    left: 1rem;
+    left: 12px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--primary-color);
     opacity: 0.7;
+    z-index: 1;
+    font-size: 0.9rem; /* Smaller icon */
+    pointer-events: none; /* Make sure icon doesn't interfere with input */
 }
 
 .input-with-icon input {
-    padding-left: 3rem;
+    padding-left: 2.5rem; /* More space for text */
+    text-indent: 0; /* Prevent text from overlapping with icon */
 }
 
 input[type="text"],
