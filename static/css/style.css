@@ -1,26 +1,26 @@
 :root {
-    /* Light Mode Colors */
-    --primary-color: #0277bd;
-    --primary-light: #58a5f0;
-    --primary-dark: #004c8c;
-    --secondary-color: #263238;
-    --success-color: #4caf50;
-    --warning-color: #ff9800;
-    --danger-color: #f44336;
+    /* Light Mode Colors - Sweet Color Palette */
+    --primary-color: #6a5acd; /* Soft purple/slate blue */
+    --primary-light: #b39ddb; /* Light lavender */
+    --primary-dark: #4527a0; /* Deep purple */
+    --secondary-color: #5c6bc0; /* Indigo */
+    --success-color: #66bb6a; /* Softer green */
+    --warning-color: #ffb74d; /* Soft orange */
+    --danger-color: #ef5350; /* Softer red */
     --light-color: #ffffff;
     --dark-color: #212121;
-    --gray-light: #f5f5f5;
-    --gray-mid: #9e9e9e;
-    --gray-dark: #616161;
+    --gray-light: #f5f6ff; /* Light blue-ish gray */
+    --gray-mid: #9fa8da; /* Soft indigo */
+    --gray-dark: #5c6bc0; /* Indigo */
     
     /* Light Mode UI Colors */
-    --background-color: #ffffff;
-    --card-background: #f8f9fa;
-    --text-color: #212121;
-    --text-secondary: #757575;
-    --border-color: #e0e0e0;
-    --shadow-color: rgba(0, 0, 0, 0.1);
-    --navbar-bg: #0277bd;
+    --background-color: #fff8fd; /* Very light pink */
+    --card-background: #f8f7ff; /* Light lavender tint */
+    --text-color: #4a4a6a; /* Soft dark blue instead of black */
+    --text-secondary: #7986cb; /* Indigo lighter */
+    --border-color: #e1e2fa; /* Soft lavender */
+    --shadow-color: rgba(106, 90, 205, 0.08); /* Soft purple shadow */
+    --navbar-bg: linear-gradient(135deg, #6a5acd, #5c6bc0); /* Gradient navbar */
     --navbar-text: #ffffff;
     
     /* UI Properties */
@@ -109,10 +109,10 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    background-color: var(--navbar-bg);
+    background: var(--navbar-bg);
     color: var(--navbar-text);
     z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(106, 90, 205, 0.15);
     transition: background-color 0.3s ease;
 }
 
@@ -127,6 +127,7 @@ body {
     font-size: 1.8rem;
     font-weight: 700;
     color: var(--navbar-text);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .nav-links {
@@ -145,16 +146,18 @@ body {
     font-weight: 500;
     padding: 0.5rem 0.75rem;
     border-radius: var(--border-radius);
-    transition: background-color 0.3s ease, opacity 0.3s ease;
+    transition: background-color 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
 }
 
 .nav-links a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
 }
 
 .nav-links a.active {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.25);
     font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .nav-links a.disabled {
@@ -174,10 +177,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .theme-toggle:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: rotate(15deg);
 }
 
 /* Mobile Navigation */
@@ -197,8 +202,8 @@ body {
     top: 70px;
     left: 0;
     width: 100%;
-    background-color: var(--navbar-bg);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: var(--navbar-bg);
+    box-shadow: 0 4px 10px rgba(106, 90, 205, 0.2);
     z-index: 999;
     opacity: 0;
     transform: translateY(-10px);
@@ -227,20 +232,22 @@ body {
     display: block;
     padding: 0.75rem 1rem;
     border-radius: var(--border-radius);
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .mobile-nav-links a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateX(5px);
 }
 
 .mobile-nav-links a.active {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.25);
     font-weight: 600;
 }
 
 .mobile-theme-toggle {
     color: var(--navbar-text);
-    background-color: transparent;
+    background-color: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: var(--border-radius);
     padding: 0.75rem 1rem;
@@ -251,10 +258,11 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    transition: background-color 0.3s ease;
 }
 
 .mobile-theme-toggle:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.15);
 }
 
 /* Buttons */
@@ -272,40 +280,44 @@ body {
 }
 
 .primary-btn {
-    background-color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
     color: white;
+    box-shadow: 0 4px 6px rgba(106, 90, 205, 0.25);
 }
 
 .primary-btn:hover {
-    background-color: var(--primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark) 70%);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(106, 90, 205, 0.3);
 }
 
 .secondary-btn {
     background-color: var(--card-background);
     color: var(--text-color);
     border: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 .secondary-btn:hover {
     background-color: var(--gray-light);
     transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--shadow-color);
 }
 
 .google-btn {
-    background-color: #db4437;
+    background: linear-gradient(135deg, #db4437, #c53929);
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    box-shadow: 0 4px 6px rgba(219, 68, 55, 0.25);
 }
 
 .google-btn:hover {
-    background-color: #c53929;
+    background: linear-gradient(135deg, #db4437, #c53929 70%);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 12px rgba(219, 68, 55, 0.3);
 }
 
 .btn:disabled {
@@ -313,6 +325,7 @@ body {
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
+    opacity: 0.7;
 }
 
 .btn i {
@@ -336,16 +349,24 @@ body {
 .login-card {
     background-color: var(--card-background);
     border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
+    box-shadow: 0 6px 18px var(--shadow-color);
     width: 100%;
     max-width: 450px;
     padding: 2.5rem;
+    transform: translateY(0);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px var(--shadow-color);
 }
 
 .login-card h2 {
     text-align: center;
     margin-bottom: 0.5rem;
-    color: var(--text-color);
+    color: var(--primary-color);
+    font-weight: 600;
 }
 
 .login-card p {
@@ -362,6 +383,7 @@ body {
     display: block;
     margin-bottom: 0.5rem;
     color: var(--text-color);
+    font-weight: 500;
 }
 
 .input-with-icon {
@@ -373,7 +395,8 @@ body {
     left: 1rem;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--text-secondary);
+    color: var(--primary-color);
+    opacity: 0.7;
 }
 
 .input-with-icon input {
@@ -402,7 +425,7 @@ input[type="date"]:focus,
 input[type="number"]:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(2, 119, 189, 0.1);
+    box-shadow: 0 0 0 3px rgba(106, 90, 205, 0.15);
 }
 
 .error-message {
@@ -444,9 +467,12 @@ input[type="number"]:focus {
 .login-link a {
     color: var(--primary-color);
     text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
 }
 
 .login-link a:hover {
+    color: var(--primary-dark);
     text-decoration: underline;
 }
 
@@ -466,7 +492,13 @@ input[type="number"]:focus {
     background-color: var(--card-background);
     border-radius: var(--border-radius);
     padding: 1.5rem;
-    box-shadow: var(--box-shadow);
+    box-shadow: 0 6px 18px var(--shadow-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.upload-section:hover, .results-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px var(--shadow-color);
 }
 
 .webcam-section {
@@ -476,7 +508,8 @@ input[type="number"]:focus {
 .webcam-section h3, .results-section h3 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
-    color: var(--text-color);
+    color: var(--primary-color);
+    font-weight: 600;
 }
 
 .webcam-toggle-buttons {
@@ -492,6 +525,7 @@ input[type="number"]:focus {
     overflow: hidden;
     background-color: #000;
     aspect-ratio: 4/3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .webcam-feed {
@@ -506,20 +540,27 @@ input[type="number"]:focus {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 2px dashed var(--border-color);
+    border: 2px dashed var(--primary-light);
     border-radius: var(--border-radius);
     padding: 2rem;
     margin-bottom: 1.5rem;
-    background-color: var(--background-color);
-    transition: border-color 0.3s ease;
+    background-color: rgba(106, 90, 205, 0.03);
+    transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
     cursor: pointer;
     min-height: 200px;
     position: relative;
 }
 
+.image-uploader:hover {
+    border-color: var(--primary-color);
+    background-color: rgba(106, 90, 205, 0.05);
+    transform: scale(1.02);
+}
+
 .image-uploader.dragover {
     border-color: var(--primary-color);
-    background-color: rgba(2, 119, 189, 0.05);
+    background-color: rgba(106, 90, 205, 0.1);
+    transform: scale(1.02);
 }
 
 .upload-instructions {
@@ -528,7 +569,7 @@ input[type="number"]:focus {
 
 .upload-instructions i {
     font-size: 3rem;
-    color: var(--text-secondary);
+    color: var(--primary-light);
     margin-bottom: 1rem;
 }
 
@@ -557,6 +598,7 @@ input[type="number"]:focus {
     max-height: 300px;
     object-fit: contain;
     border-radius: var(--border-radius);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 #detectButton {
@@ -570,6 +612,8 @@ input[type="number"]:focus {
 .table-container {
     overflow-x: auto;
     margin-bottom: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 6px var(--shadow-color);
 }
 
 table {
@@ -586,8 +630,8 @@ table th, table td {
 
 table th {
     font-weight: 600;
-    color: var(--text-color);
-    background-color: rgba(0, 0, 0, 0.03);
+    color: var(--primary-color);
+    background-color: rgba(106, 90, 205, 0.05);
 }
 
 table td {
@@ -599,7 +643,7 @@ table tr:last-child td {
 }
 
 table tr:hover {
-    background-color: rgba(0, 0, 0, 0.02);
+    background-color: rgba(106, 90, 205, 0.03);
 }
 
 .status-cell {
@@ -646,13 +690,20 @@ table tr:hover {
     background-color: var(--card-background);
     border-radius: var(--border-radius);
     padding: 1.5rem;
-    box-shadow: var(--box-shadow);
+    box-shadow: 0 6px 18px var(--shadow-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.add-product-section:hover, .inventory-section:hover, .alerts-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px var(--shadow-color);
 }
 
 .add-product-section h3, .inventory-section h3, .alerts-section h3 {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
-    color: var(--text-color);
+    color: var(--primary-color);
+    font-weight: 600;
 }
 
 .add-product-form {
@@ -674,6 +725,7 @@ table tr:hover {
 .image-capture-section h4 {
     margin-bottom: 1rem;
     color: var(--text-color);
+    font-weight: 500;
 }
 
 .form-actions {
@@ -697,6 +749,12 @@ table tr:hover {
     border-radius: var(--border-radius);
     padding: 1rem;
     border-left: 4px solid;
+    box-shadow: 0 3px 8px var(--shadow-color);
+    transition: transform 0.3s ease;
+}
+
+.alert-card:hover {
+    transform: translateY(-3px);
 }
 
 .alert-card.alert-expired {
@@ -713,6 +771,7 @@ table tr:hover {
     align-items: center;
     gap: 0.5rem;
     color: var(--text-color);
+    font-weight: 600;
 }
 
 .alert-card p {
@@ -738,10 +797,12 @@ table tr:hover {
     object-fit: cover;
     border-radius: 4px;
     cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .thumbnail:hover {
-    transform: scale(1.1);
+    transform: scale(1.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Modal */
@@ -752,11 +813,17 @@ table tr:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.75);
     z-index: 1100;
     justify-content: center;
     align-items: center;
     padding: 2rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.active {
+    opacity: 1;
 }
 
 .modal-content {
@@ -766,6 +833,13 @@ table tr:hover {
     max-width: 80%;
     max-height: 80%;
     overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.modal.active .modal-content {
+    transform: scale(1);
 }
 
 .close-modal {
@@ -782,12 +856,19 @@ table tr:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.close-modal:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+    transform: rotate(90deg);
 }
 
 .modal-image {
     display: block;
     max-width: 100%;
     max-height: 80vh;
+    border-radius: var(--border-radius);
 }
 
 /* Utilities */
