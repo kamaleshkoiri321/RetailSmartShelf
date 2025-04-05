@@ -6,6 +6,191 @@
     <title>RetailAI - Detection</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/input-spacing.css') }}">
+    <style>
+        /* Enhanced detection page styling */
+        .detection-container {
+            gap: 2.5rem;
+        }
+        
+        .upload-section, .results-section {
+            box-shadow: 0 15px 35px var(--shadow-color);
+            padding: 2rem;
+        }
+        
+        .webcam-container {
+            aspect-ratio: 4/3;
+            border: 3px solid var(--primary-light);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .webcam-container:hover {
+            transform: scale(1.01);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        .webcam-feed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.5s ease;
+        }
+        
+        .webcam-toggle-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            justify-content: center;
+        }
+        
+        .webcam-toggle-buttons .btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            max-width: 200px;
+        }
+        
+        .image-uploader {
+            border: 2px dashed var(--primary-light);
+            background: rgba(142, 68, 173, 0.03);
+            padding: 2.5rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-height: 200px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+        }
+        
+        .image-uploader:hover {
+            border-color: var(--primary-color);
+            background: rgba(142, 68, 173, 0.08);
+            transform: translateY(-5px);
+        }
+        
+        .upload-instructions {
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-instructions i {
+            font-size: 4rem;
+            color: var(--primary-light);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .image-uploader:hover .upload-instructions i {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+        
+        .image-preview {
+            max-width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .image-preview:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        #detectButton {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        #detectButton::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+            transform: translateX(-100%);
+            transition: all 0.6s ease;
+            z-index: -1;
+        }
+        
+        #detectButton:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .webcam-section h3, .results-section h3 {
+            position: relative;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .webcam-section h3::after, .results-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border-radius: 3px;
+        }
+        
+        .detection-result-row {
+            transition: all 0.3s ease;
+        }
+        
+        .detection-result-row:hover {
+            background-color: rgba(142, 68, 173, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .status-badge {
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            min-width: 120px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body class="detection-page">
     <!-- Navigation Bar -->
@@ -19,11 +204,6 @@
                 <li><a href="{{ url_for('login') }}">Login</a></li>
                 <li><a href="{{ url_for('detection') }}" class="active">Detection</a></li>
                 <li><a href="{{ url_for('inventory') }}">Inventory</a></li>
-                <li>
-                    <button class="theme-toggle" title="Toggle theme">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                </li>
             </ul>
             <button id="mobileMenuToggle" class="mobile-menu-toggle">
                 <i class="fas fa-bars"></i>
@@ -38,31 +218,26 @@
             <li><a href="{{ url_for('login') }}">Login</a></li>
             <li><a href="{{ url_for('detection') }}" class="active">Detection</a></li>
             <li><a href="{{ url_for('inventory') }}">Inventory</a></li>
-            <li>
-                <button class="mobile-theme-toggle">
-                    <i class="fas fa-moon"></i> Toggle Theme
-                </button>
-            </li>
         </ul>
     </div>
 
     <!-- Main Content -->
     <div class="container">
         <div class="page-header">
-            <h2>Image Detection Dashboard</h2>
-            <p>Upload an image of a retail shelf to detect products</p>
+            <h2>Smart Shelf Detection</h2>
+            <p>Upload or capture an image of a retail shelf to detect products</p>
         </div>
         
         <div class="detection-container">
-            <div class="upload-section">
+            <div class="upload-section fade-in-up">
                 <div class="webcam-section">
-                    <h3>Capture Image</h3>
+                    <h3><i class="fas fa-camera"></i> Capture Image</h3>
                     <div class="webcam-toggle-buttons">
                         <button id="startCameraBtn" class="btn secondary-btn">
                             <i class="fas fa-video"></i> Start Camera
                         </button>
                         <button id="captureImageBtn" class="btn secondary-btn" disabled>
-                            <i class="fas fa-camera"></i> Capture Image
+                            <i class="fas fa-camera"></i> Capture
                         </button>
                     </div>
                     <div class="webcam-container">
@@ -80,13 +255,13 @@
                     <input type="file" id="imageInput" accept="image/*" class="file-input">
                 </div>
                 
-                <button id="detectButton" class="btn primary-btn" disabled>
+                <button id="detectButton" class="btn primary-btn pulse" disabled>
                     <i class="fas fa-search"></i> Detect Products
                 </button>
             </div>
             
-            <div class="results-section hidden" id="resultsSection">
-                <h3>Detection Results</h3>
+            <div class="results-section hidden fade-in-up" id="resultsSection" style="animation-delay: 0.3s;">
+                <h3><i class="fas fa-clipboard-check"></i> Detection Results</h3>
                 <div class="table-container">
                     <table id="detectionTable">
                         <thead>

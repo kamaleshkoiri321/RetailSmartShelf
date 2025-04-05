@@ -29,6 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Webcam functionality for product image
     startProductCameraBtn.addEventListener('click', async function() {
         try {
+            // Animate the button first
+            startProductCameraBtn.classList.add('pulse');
+            
             productStream = await navigator.mediaDevices.getUserMedia({ 
                 video: {
                     width: { ideal: 640 },
@@ -38,22 +41,43 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             productWebcam.srcObject = productStream;
+            
+            // Show the video element with animation
             productWebcam.classList.remove('hidden');
+            productWebcam.classList.add('fade-in');
+            
+            // Enable capture button with animation
             captureProductImageBtn.disabled = false;
+            captureProductImageBtn.classList.add('pulse');
+            setTimeout(() => captureProductImageBtn.classList.remove('pulse'), 1000);
+            
+            // Update start camera button state
             startProductCameraBtn.disabled = true;
+            startProductCameraBtn.classList.remove('pulse');
             startProductCameraBtn.innerHTML = '<i class="fas fa-video-slash"></i> Camera On';
             
             // Hide the preview if it was shown
-            productImagePreview.classList.add('hidden');
+            if (!productImagePreview.classList.contains('hidden')) {
+                productImagePreview.classList.add('fade-out');
+                setTimeout(() => {
+                    productImagePreview.classList.add('hidden');
+                    productImagePreview.classList.remove('fade-out');
+                }, 300);
+            }
         } catch (err) {
             console.error('Error accessing webcam:', err);
             alert('Could not access webcam. Please ensure you have a webcam connected and have given permission to use it.');
+            startProductCameraBtn.classList.remove('pulse');
         }
     });
     
     captureProductImageBtn.addEventListener('click', function() {
         if (!productStream) return;
         
+        // Visual feedback on button click
+        captureProductImageBtn.classList.add('pulse');
+        
+        // Create canvas and capture image
         const canvas = document.createElement('canvas');
         canvas.width = productWebcam.videoWidth;
         canvas.height = productWebcam.videoHeight;
@@ -64,9 +88,48 @@ document.addEventListener('DOMContentLoaded', function() {
         // Convert to base64 image
         capturedProductImage = canvas.toDataURL('image/jpeg');
         
-        // Set as preview
-        productImagePreview.src = capturedProductImage;
-        productImagePreview.classList.remove('hidden');
+        // Hide video first with fade out
+        productWebcam.classList.add('fade-out');
+        setTimeout(() => {
+            productWebcam.classList.add('hidden');
+            productWebcam.classList.remove('fade-out');
+            
+            // Show preview with fade in
+            productImagePreview.src = capturedProductImage;
+            productImagePreview.classList.remove('hidden');
+            productImagePreview.classList.add('fade-in');
+            
+            // Remove animation classes after transition
+            setTimeout(() => {
+                productImagePreview.classList.remove('fade-in');
+                captureProductImageBtn.classList.remove('pulse');
+            }, 500);
+        }, 300);
+        
+        // Display capture feedback message
+        const captureMsg = document.createElement('div');
+        captureMsg.className = 'capture-success';
+        captureMsg.innerHTML = '<i class="fas fa-check-circle"></i> Image captured successfully!';
+        captureMsg.style.position = 'absolute';
+        captureMsg.style.top = '10px';
+        captureMsg.style.left = '50%';
+        captureMsg.style.transform = 'translateX(-50%)';
+        captureMsg.style.backgroundColor = 'rgba(46, 204, 113, 0.9)';
+        captureMsg.style.color = 'white';
+        captureMsg.style.padding = '8px 16px';
+        captureMsg.style.borderRadius = '20px';
+        captureMsg.style.zIndex = '100';
+        captureMsg.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+        captureMsg.style.transition = 'all 0.3s ease';
+        
+        const webcamContainer = document.querySelector('.webcam-container.product-webcam');
+        webcamContainer.style.position = 'relative';
+        webcamContainer.appendChild(captureMsg);
+        
+        setTimeout(() => {
+            captureMsg.style.opacity = '0';
+            setTimeout(() => captureMsg.remove(), 300);
+        }, 2000);
         
         // Stop webcam
         stopProductWebcam();
@@ -76,7 +139,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (productStream) {
             productStream.getTracks().forEach(track => track.stop());
             productStream = null;
-            productWebcam.classList.add('hidden');
             productWebcam.srcObject = null;
             captureProductImageBtn.disabled = true;
             startProductCameraBtn.disabled = false;
@@ -98,6 +160,12 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
+        // Add loading effect to submit button
+        const submitBtn = addProductForm.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+        submitBtn.disabled = true;
+        
         // Create new product object
         const newProduct = {
             name: name,
@@ -118,6 +186,26 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                // Show success notification
+                const notification = document.createElement('div');
+                notification.className = 'notification success fade-in';
+                notification.innerHTML = '<i class="fas fa-check-circle"></i> Product added successfully!';
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.backgroundColor = 'rgba(46, 204, 113, 0.9)';
+                notification.style.color = 'white';
+                notification.style.padding = '15px 25px';
+                notification.style.borderRadius = '10px';
+                notification.style.zIndex = '1000';
+                notification.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.classList.add('fade-out');
+                    setTimeout(() => notification.remove(), 500);
+                }, 3000);
+                
                 // Refresh the inventory display
                 fetchAndDisplayInventory();
                 
@@ -130,20 +218,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 const defaultExpiryDate = new Date();
                 defaultExpiryDate.setDate(defaultExpiryDate.getDate() + 30);
                 document.getElementById('productExpiryDate').valueAsDate = defaultExpiryDate;
-                
-                alert('Product added successfully!');
             } else {
                 alert('Error adding product: ' + (data.message || 'Unknown error'));
             }
+            
+            // Restore button state
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
         })
         .catch(error => {
             console.error('Add product error:', error);
             alert('Failed to add product. Please try again.');
+            
+            // Restore button state
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
         });
     });
 
     // Fetch inventory data
     function fetchAndDisplayInventory() {
+        // Show loading state
+        inventoryTableBody.innerHTML = '<tr><td colspan="9" class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading inventory...</td></tr>';
+        alertsContainer.innerHTML = '<div class="loading-indicator"><i class="fas fa-spinner fa-spin"></i> Loading alerts...</div>';
+        
         fetch('/api/products')
             .then(response => response.json())
             .then(data => {
@@ -159,6 +257,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         const products = JSON.parse(savedProducts);
                         displayInventory(products);
                         displayAlerts(products);
+                    } else {
+                        // Show empty state
+                        inventoryTableBody.innerHTML = '<tr><td colspan="9" class="text-center">No products found. Add products using the form above.</td></tr>';
+                        alertsContainer.innerHTML = '<p>No alerts at this time.</p>';
                     }
                 }
             })
@@ -171,19 +273,33 @@ document.addEventListener('DOMContentLoaded', function() {
                     const products = JSON.parse(savedProducts);
                     displayInventory(products);
                     displayAlerts(products);
+                } else {
+                    // Show error state
+                    inventoryTableBody.innerHTML = '<tr><td colspan="9" class="text-center text-danger"><i class="fas fa-exclamation-triangle"></i> Failed to load inventory. Please try again.</td></tr>';
+                    alertsContainer.innerHTML = '<p class="text-danger"><i class="fas fa-exclamation-triangle"></i> Failed to load alerts. Please try again.</p>';
                 }
             });
     }
     
     // Back to detection button
     backToDetectionBtn.addEventListener('click', function() {
-        window.location.href = '/detection';
+        // Add transition effect
+        document.body.style.opacity = '0';
+        setTimeout(() => {
+            window.location.href = '/detection';
+        }, 300);
     });
 
     // Function to display inventory with status and discount suggestions
     function displayInventory(products) {
         // Clear existing rows
         inventoryTableBody.innerHTML = '';
+        
+        // Handle empty inventory
+        if (products.length === 0) {
+            inventoryTableBody.innerHTML = '<tr><td colspan="9" class="text-center">No products in inventory. Add some products using the form above.</td></tr>';
+            return;
+        }
         
         // Add product rows with status and discount
         products.forEach((product, index) => {
@@ -207,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 discountSuggestion = 'Remove from shelf';
             } else if (product.is_expiring_soon || daysUntilExpiry <= 7) {
                 status = 'Near Expiry';
-                statusClass = 'status-near-expiry';
+                statusClass = 'status-expiring-soon';
                 discountSuggestion = daysUntilExpiry <= 3 ? '50% off' : '20% off';
             } else {
                 status = 'Good';
@@ -216,7 +332,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             const row = document.createElement('tr');
-            row.className = status.toLowerCase().replace(' ', '-');
+            row.className = 'inventory-row fade-in ' + status.toLowerCase().replace(' ', '-');
+            row.style.animationDelay = (index * 0.1) + 's';
             
             // Format the created_at date if available
             const dateAdded = product.created_at 
@@ -226,7 +343,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Create image thumbnail cell content
             let imageThumbnail = '';
             if (product.product_image) {
-                imageThumbnail = `<img src="${product.product_image}" alt="${product.name}" class="product-image-thumbnail" onclick="showImageModal('${product.product_image}')">`;
+                imageThumbnail = `<img src="${product.product_image}" alt="${product.name}" class="thumbnail" onclick="showImageModal('${product.product_image}')">`;
             } else {
                 imageThumbnail = '<i class="fas fa-image text-muted"></i>';
             }
@@ -238,7 +355,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${dateAdded}</td>
                 <td>${formatDate(product.expiry_date)}</td>
                 <td>${product.quantity}</td>
-                <td><span class="status-badge ${statusClass}">${status}</span></td>
+                <td><span class="status-cell ${statusClass}">${status}</span></td>
                 <td>${discountSuggestion}</td>
                 <td>${imageThumbnail}</td>
             `;
@@ -271,12 +388,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // No alerts if no products are expiring soon
         if (alertProducts.length === 0) {
-            alertsContainer.innerHTML = '<p>No alerts at this time.</p>';
+            alertsContainer.innerHTML = '<p class="no-alerts">No alerts at this time. <i class="fas fa-check-circle"></i></p>';
             return;
         }
         
         // Add alert card for each expiring product
-        alertProducts.forEach(product => {
+        alertProducts.forEach((product, index) => {
             let daysUntilExpiry = product.days_until_expiry;
             if (daysUntilExpiry === undefined) {
                 const currentDate = new Date();
@@ -286,9 +403,13 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const alertCard = document.createElement('div');
             
+            // Add animation with staggered delay
+            alertCard.classList.add('fade-in');
+            alertCard.style.animationDelay = (index * 0.15) + 's';
+            
             // Determine alert type
             if (product.is_expired || daysUntilExpiry < 0) {
-                alertCard.className = 'alert-card expired';
+                alertCard.className = 'alert-card alert-expired fade-in';
                 alertCard.innerHTML = `
                     <h4><i class="fas fa-exclamation-circle"></i> Expired Product</h4>
                     <p><strong>${product.name}</strong> (Batch: ${product.batch})</p>
@@ -296,7 +417,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p>Action: Remove from shelf immediately</p>
                 `;
             } else {
-                alertCard.className = 'alert-card near-expiry';
+                alertCard.className = 'alert-card alert-expiring-soon fade-in';
                 alertCard.innerHTML = `
                     <h4><i class="fas fa-exclamation-triangle"></i> Near Expiry</h4>
                     <p><strong>${product.name}</strong> (Batch: ${product.batch})</p>
@@ -311,4 +432,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize the page
     fetchAndDisplayInventory();
+    
+    // Add event listeners to form inputs for animation
+    const formInputs = document.querySelectorAll('input, select');
+    formInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.closest('.form-group').classList.add('active');
+        });
+        
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+                this.closest('.form-group').classList.remove('active');
+            }
+        });
+    });
 });

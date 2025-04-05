@@ -5,48 +5,86 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = '/login';
         return;
     }
-
+    
     // Elements
-    const imageDropArea = document.getElementById('imageDropArea');
-    const imageInput = document.getElementById('imageInput');
+    const startCameraBtn = document.getElementById('startCameraBtn');
+    const captureImageBtn = document.getElementById('captureImageBtn');
+    const webcamElement = document.getElementById('webcam');
     const imagePreview = document.getElementById('imagePreview');
+    const imageInput = document.getElementById('imageInput');
+    const imageDropArea = document.getElementById('imageDropArea');
     const uploadInstructions = document.getElementById('uploadInstructions');
     const detectButton = document.getElementById('detectButton');
     const resultsSection = document.getElementById('resultsSection');
     const detectionTableBody = document.getElementById('detectionTableBody');
     const viewInventoryBtn = document.getElementById('viewInventoryBtn');
     
-    // Webcam elements
-    const startCameraBtn = document.getElementById('startCameraBtn');
-    const captureImageBtn = document.getElementById('captureImageBtn');
-    const webcamElement = document.getElementById('webcam');
-    
     let stream = null;
+    let capturedImage = null;
     
-    // Webcam functionality
+    // Start webcam
     startCameraBtn.addEventListener('click', async function() {
         try {
+            // Add animation to button
+            startCameraBtn.classList.add('pulse');
+            
             stream = await navigator.mediaDevices.getUserMedia({ 
                 video: {
                     width: { ideal: 1280 },
                     height: { ideal: 720 },
                     facingMode: 'environment' // Try to use back camera on mobile
-                } 
+                }
             });
             
             webcamElement.srcObject = stream;
+            
+            // Show video with fade in effect
             webcamElement.classList.remove('hidden');
+            webcamElement.classList.add('fade-in');
+            setTimeout(() => webcamElement.classList.remove('fade-in'), 500);
+            
+            // Enable capture button with animation
             captureImageBtn.disabled = false;
-            startCameraBtn.disabled = true;
+            captureImageBtn.classList.add('pulse');
+            setTimeout(() => captureImageBtn.classList.remove('pulse'), 1000);
+            
+            // Update start camera button
             startCameraBtn.innerHTML = '<i class="fas fa-video-slash"></i> Camera On';
+            startCameraBtn.classList.remove('pulse');
+            startCameraBtn.disabled = true;
+            
+            // Reset image preview and detection results
+            imagePreview.classList.add('hidden');
+            imagePreview.src = '';
+            capturedImage = null;
+            
+            // Hide results section if visible
+            if (!resultsSection.classList.contains('hidden')) {
+                resultsSection.classList.add('fade-out');
+                setTimeout(() => {
+                    resultsSection.classList.add('hidden');
+                    resultsSection.classList.remove('fade-out');
+                }, 300);
+            }
+            
+            // Disable detect button
+            detectButton.disabled = true;
+            
         } catch (err) {
             console.error('Error accessing webcam:', err);
             alert('Could not access webcam. Please ensure you have a webcam connected and have given permission to use it.');
+            
+            // Reset button animation
+            startCameraBtn.classList.remove('pulse');
         }
     });
     
+    // Capture image from webcam
     captureImageBtn.addEventListener('click', function() {
         if (!stream) return;
+        
+        // Visual feedback for capture button
+        captureImageBtn.classList.add('pulse');
         
         const canvas = document.createElement('canvas');
         canvas.width = webcamElement.videoWidth;
@@ -55,181 +93,255 @@ document.addEventListener('DOMContentLoaded', function() {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(webcamElement, 0, 0, canvas.width, canvas.height);
         
-        // Convert to base64 image
-        const imageDataUrl = canvas.toDataURL('image/jpeg');
+        // Add a "flash" effect
+        const flash = document.createElement('div');
+        flash.style.position = 'absolute';
+        flash.style.top = '0';
+        flash.style.left = '0';
+        flash.style.width = '100%';
+        flash.style.height = '100%';
+        flash.style.backgroundColor = 'white';
+        flash.style.opacity = '0.8';
+        flash.style.zIndex = '10';
+        flash.style.pointerEvents = 'none';
+        flash.style.transition = 'opacity 0.3s ease';
         
-        // Set as preview
-        imagePreview.src = imageDataUrl;
-        imagePreview.classList.remove('hidden');
-        uploadInstructions.classList.add('hidden');
+        document.querySelector('.webcam-container').appendChild(flash);
         
-        // Enable detect button
-        detectButton.disabled = false;
+        setTimeout(() => {
+            flash.style.opacity = '0';
+            setTimeout(() => flash.remove(), 300);
+        }, 100);
+        
+        // Convert to base64 and set as preview
+        capturedImage = canvas.toDataURL('image/jpeg');
+        imagePreview.src = capturedImage;
+        
+        // Hide webcam and show preview
+        webcamElement.classList.add('fade-out');
+        setTimeout(() => {
+            webcamElement.classList.add('hidden');
+            webcamElement.classList.remove('fade-out');
+            
+            imagePreview.classList.remove('hidden');
+            imagePreview.classList.add('fade-in');
+            setTimeout(() => imagePreview.classList.remove('fade-in'), 500);
+            
+            // Enable detect button
+            detectButton.disabled = false;
+            detectButton.classList.add('pulse');
+            setTimeout(() => detectButton.classList.remove('pulse'), 1000);
+            
+            // Reset capture button
+            captureImageBtn.classList.remove('pulse');
+        }, 300);
         
         // Stop webcam
         stopWebcam();
     });
     
+    // Stop webcam
     function stopWebcam() {
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
             stream = null;
-            webcamElement.classList.add('hidden');
             webcamElement.srcObject = null;
             captureImageBtn.disabled = true;
             startCameraBtn.disabled = false;
             startCameraBtn.innerHTML = '<i class="fas fa-video"></i> Start Camera';
         }
     }
-
-    // Image upload handling
-    imageDropArea.addEventListener('click', function() {
-        if (captureImageBtn.disabled) {
-            imageInput.click();
+    
+    // File input handler
+    imageInput.addEventListener('change', function(e) {
+        if (e.target.files && e.target.files[0]) {
+            handleImageFile(e.target.files[0]);
         }
     });
-
+    
+    // Drag and drop handlers
     imageDropArea.addEventListener('dragover', function(e) {
         e.preventDefault();
-        imageDropArea.classList.add('dragover');
+        this.classList.add('dragover');
     });
-
+    
     imageDropArea.addEventListener('dragleave', function() {
-        imageDropArea.classList.remove('dragover');
+        this.classList.remove('dragover');
     });
-
+    
     imageDropArea.addEventListener('drop', function(e) {
         e.preventDefault();
-        imageDropArea.classList.remove('dragover');
+        this.classList.remove('dragover');
         
-        if (e.dataTransfer.files.length) {
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
             handleImageFile(e.dataTransfer.files[0]);
         }
     });
-
-    imageInput.addEventListener('change', function() {
-        if (imageInput.files.length) {
-            handleImageFile(imageInput.files[0]);
-        }
+    
+    imageDropArea.addEventListener('click', function() {
+        // Trigger file input click
+        if (!imagePreview.classList.contains('hidden')) return;
+        imageInput.click();
     });
-
-    // Handle the selected image file
+    
+    // Handle the uploaded image file
     function handleImageFile(file) {
         if (!file.type.match('image.*')) {
-            alert('Please select an image file');
+            alert('Please select an image file.');
             return;
         }
-
-        const reader = new FileReader();
         
+        const reader = new FileReader();
         reader.onload = function(e) {
-            imagePreview.src = e.target.result;
-            imagePreview.classList.remove('hidden');
-            uploadInstructions.classList.add('hidden');
-            detectButton.disabled = false;
-            
-            // If webcam is running, stop it
+            // Stop webcam if running
             stopWebcam();
+            
+            // Set image preview
+            imagePreview.src = e.target.result;
+            capturedImage = e.target.result;
+            
+            // Hide upload instructions and show image
+            uploadInstructions.style.display = 'none';
+            imagePreview.classList.remove('hidden');
+            
+            // Enable detect button
+            detectButton.disabled = false;
+            detectButton.classList.add('pulse');
+            setTimeout(() => detectButton.classList.remove('pulse'), 1000);
         };
         
         reader.readAsDataURL(file);
     }
-
-    // Product detection
+    
+    // Detect button
     detectButton.addEventListener('click', function() {
-        // Set button to loading state
-        detectButton.disabled = true;
-        detectButton.textContent = 'Detecting...';
+        if (!capturedImage) {
+            alert('Please capture or upload an image first.');
+            return;
+        }
         
-        // Call the backend API to save the detection
-        fetch('/detection', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                image_data: imagePreview.src  // Send the image data
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Get products from the detection
-                const detectedProducts = data.detection.products;
-                
-                // Save to localStorage for inventory page (optional, since we also store in DB)
-                localStorage.setItem('detectedProducts', JSON.stringify(detectedProducts));
-                
-                // Display results
-                displayDetectionResults(detectedProducts);
-                
-                // Show results section
-                resultsSection.classList.remove('hidden');
-            } else {
-                alert('Error detecting products: ' + (data.message || 'Unknown error'));
-            }
-        })
-        .catch(error => {
-            console.error('Detection error:', error);
-            alert('Failed to process detection. Please try again.');
-        })
-        .finally(() => {
-            // Reset button state
-            detectButton.disabled = false;
+        // Add loading state
+        detectButton.disabled = true;
+        detectButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Detecting...';
+        
+        // Simulate API call with a short delay (replace with actual API call)
+        setTimeout(() => {
+            // Get demo products
+            const demoProducts = getDemoProducts();
+            
+            // Show results
+            displayDetectionResults(demoProducts);
+            
+            // Store products in localStorage for inventory demo
+            localStorage.setItem('detectedProducts', JSON.stringify(demoProducts));
+            
+            // Reset button
             detectButton.innerHTML = '<i class="fas fa-search"></i> Detect Products';
-        });
+            detectButton.disabled = false;
+        }, 1500);
     });
-
-    // Display detection results in table
+    
+    // Function to display detection results
     function displayDetectionResults(products) {
         // Clear existing rows
         detectionTableBody.innerHTML = '';
         
-        // Add product rows
-        products.forEach(product => {
+        // Show results section if hidden
+        if (resultsSection.classList.contains('hidden')) {
+            resultsSection.classList.remove('hidden');
+            resultsSection.classList.add('fade-in');
+            setTimeout(() => resultsSection.classList.remove('fade-in'), 500);
+        }
+        
+        // Add product rows with staggered animation
+        products.forEach((product, index) => {
+            // Determine status and class
+            let statusText = '';
+            let statusClass = '';
+            
+            if (product.is_expired) {
+                statusText = 'Expired';
+                statusClass = 'status-expired';
+            } else if (product.is_expiring_soon) {
+                statusText = 'Near Expiry';
+                statusClass = 'status-expiring-soon';
+            } else {
+                statusText = 'Good';
+                statusClass = 'status-good';
+            }
+            
             const row = document.createElement('tr');
+            row.className = 'detection-result-row';
+            row.style.animation = `fadeInUp 0.5s ease forwards ${index * 0.1}s`;
+            row.style.opacity = '0';
             
             row.innerHTML = `
                 <td>${product.name}</td>
                 <td>${product.batch}</td>
                 <td>${formatDate(product.expiry_date)}</td>
                 <td>${product.quantity}</td>
+                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
             `;
             
             detectionTableBody.appendChild(row);
         });
+        
+        // Scroll to the results
+        resultsSection.scrollIntoView({ behavior: 'smooth' });
     }
-
+    
     // View inventory button
     viewInventoryBtn.addEventListener('click', function() {
-        window.location.href = '/inventory';
+        // Add transition effect
+        document.body.style.opacity = '0';
+        document.body.style.transition = 'opacity 0.3s ease';
+        
+        setTimeout(() => {
+            window.location.href = '/inventory';
+        }, 300);
     });
-
-    // Check for already detected products
-    fetch('/api/detections')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && data.detection && data.detection.products && data.detection.products.length > 0) {
-                const products = data.detection.products;
-                
-                // Save to localStorage for inventory page
-                localStorage.setItem('detectedProducts', JSON.stringify(products));
-                
-                // Display results
-                displayDetectionResults(products);
-                
-                // Show results section
-                resultsSection.classList.remove('hidden');
+    
+    // Demo product data for testing
+    function getDemoProducts() {
+        const today = new Date();
+        
+        // Expired product (5 days ago)
+        const expiredDate = new Date();
+        expiredDate.setDate(today.getDate() - 5);
+        
+        // Near expiry (3 days from now)
+        const nearExpiryDate = new Date();
+        nearExpiryDate.setDate(today.getDate() + 3);
+        
+        // Good product (30 days from now)
+        const goodExpiryDate = new Date();
+        goodExpiryDate.setDate(today.getDate() + 30);
+        
+        return [
+            {
+                name: 'Milk Carton',
+                batch: 'MK4872',
+                expiry_date: expiredDate.toISOString().split('T')[0],
+                quantity: 5,
+                is_expired: true,
+                is_expiring_soon: false
+            },
+            {
+                name: 'Fresh Bread',
+                batch: 'BR2209',
+                expiry_date: nearExpiryDate.toISOString().split('T')[0],
+                quantity: 8,
+                is_expired: false,
+                is_expiring_soon: true
+            },
+            {
+                name: 'Cereal Box',
+                batch: 'CR7732',
+                expiry_date: goodExpiryDate.toISOString().split('T')[0],
+                quantity: 12,
+                is_expired: false,
+                is_expiring_soon: false
             }
-        })
-        .catch(error => {
-            console.error('Error fetching detections:', error);
-            // If API fails, check localStorage as fallback
-            const savedProducts = localStorage.getItem('detectedProducts');
-            if (savedProducts) {
-                const products = JSON.parse(savedProducts);
-                displayDetectionResults(products);
-                resultsSection.classList.remove('hidden');
-            }
-        });
+        ];
+    }
 });

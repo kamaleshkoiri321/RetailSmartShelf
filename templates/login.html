@@ -41,7 +41,7 @@
     <!-- Main Content -->
     <div class="container">
         <div class="login-container">
-            <div class="login-card">
+            <div class="login-card slide-up">
                 <h2>Smart Shelf Monitoring</h2>
                 <p>Login to access the RetailAI system</p>
                 
@@ -64,15 +64,21 @@
                         <span class="error-message" id="passwordError"></span>
                     </div>
                     
-                    <button type="submit" class="btn primary-btn">Login</button>
+                    <div class="form-actions">
+                        <button type="submit" class="btn primary-btn">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                    </div>
                     
                     <div class="divider">
                         <span>OR</span>
                     </div>
                     
-                    <button type="button" class="btn google-btn">
-                        <i class="fab fa-google"></i> Login with Google
-                    </button>
+                    <div class="form-actions">
+                        <button type="button" class="btn google-btn">
+                            <i class="fab fa-google"></i> Login with Google
+                        </button>
+                    </div>
                     
                     <div class="login-link">
                         Don't have an account? <a href="{{ url_for('register') }}">Register here</a>

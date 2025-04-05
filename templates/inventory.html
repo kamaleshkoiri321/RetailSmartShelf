@@ -6,6 +6,138 @@
     <title>RetailAI - Inventory</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/input-spacing.css') }}">
+    <style>
+        /* Additional styling for product image section */
+        .webcam-container.product-webcam {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border: 3px solid var(--primary-light);
+            transition: all 0.3s ease;
+        }
+        
+        .webcam-container.product-webcam:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+        }
+        
+        .webcam-feed, .image-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+        
+        .webcam-toggle-buttons.product-toggle {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .webcam-toggle-buttons.product-toggle .btn {
+            min-width: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .capture-success {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(46, 204, 113, 0.9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            z-index: 100;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .fade-out {
+            animation: fadeOut 0.3s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+        
+        .image-capture-section {
+            background-color: rgba(142, 68, 173, 0.05);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1.5rem;
+            border: 1px dashed var(--primary-light);
+            transition: all 0.3s ease;
+        }
+        
+        .image-capture-section:hover {
+            background-color: rgba(142, 68, 173, 0.08);
+        }
+        
+        .image-capture-section h4 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        /* Enhanced table styling */
+        .inventory-row {
+            transition: all 0.3s ease;
+        }
+        
+        .inventory-row:hover {
+            background-color: rgba(142, 68, 173, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .status-cell {
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            text-align: center;
+            min-width: 120px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .thumbnail {
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-light);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        
+        .thumbnail:hover {
+            transform: scale(2);
+            border-width: 3px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+    </style>
 </head>
 <body class="inventory-page">
     <!-- Navigation Bar -->
@@ -45,31 +177,43 @@
         
         <div class="inventory-container">
             <div class="add-product-section">
-                <h3>Add New Product</h3>
+                <h3><i class="fas fa-plus-circle"></i> Add New Product</h3>
                 <form id="addProductForm" class="add-product-form">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="productName">Product Name</label>
-                            <input type="text" id="productName" name="productName" required>
+                            <div class="input-with-icon">
+                                <i class="fas fa-box"></i>
+                                <input type="text" id="productName" name="productName" placeholder="Enter product name" required>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="productBatch">Batch Number</label>
-                            <input type="text" id="productBatch" name="productBatch" required>
+                            <div class="input-with-icon">
+                                <i class="fas fa-hashtag"></i>
+                                <input type="text" id="productBatch" name="productBatch" placeholder="Enter batch number" required>
+                            </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="productQuantity">Quantity</label>
-                            <input type="number" id="productQuantity" name="productQuantity" min="1" required>
+                            <div class="input-with-icon">
+                                <i class="fas fa-cubes"></i>
+                                <input type="number" id="productQuantity" name="productQuantity" min="1" placeholder="Enter quantity" required>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="productExpiryDate">Expiry Date</label>
-                            <input type="date" id="productExpiryDate" name="productExpiryDate" required>
+                            <div class="input-with-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                                <input type="date" id="productExpiryDate" name="productExpiryDate" required>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="image-capture-section">
-                        <h4>Product Image (Optional)</h4>
+                        <h4><i class="fas fa-camera"></i> Product Image</h4>
                         <div class="webcam-toggle-buttons product-toggle">
                             <button type="button" id="startProductCameraBtn" class="btn secondary-btn">
                                 <i class="fas fa-video"></i> Start Camera
@@ -93,44 +237,46 @@
             </div>
             
             <div class="inventory-section">
-                <h3>Product Inventory</h3>
+                <h3><i class="fas fa-clipboard-list"></i> Product Inventory</h3>
                 <div class="table-container">
                     <table id="inventoryTable">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Product Name</th>
-                                <th>Batch Number</th>
-                                <th>Date Added</th>
+                                <th>Product</th>
+                                <th>Batch</th>
+                                <th>Added Date</th>
                                 <th>Expiry Date</th>
                                 <th>Quantity</th>
                                 <th>Status</th>
-                                <th>Discount Suggestion</th>
+                                <th>Action</th>
                                 <th>Image</th>
                             </tr>
                         </thead>
                         <tbody id="inventoryTableBody">
-                            <!-- Inventory data will be populated here -->
+                            <tr>
+                                <td colspan="9" class="text-center">Loading inventory...</td>
+                            </tr>
                         </tbody>
                     </table>
+                </div>
+                
+                <div class="form-actions">
+                    <button id="backToDetectionBtn" class="btn secondary-btn">
+                        <i class="fas fa-arrow-left"></i> Back to Detection
+                    </button>
                 </div>
             </div>
             
             <div class="alerts-section">
-                <h3>Alerts & Notifications</h3>
-                <div id="alertsContainer" class="alerts-container">
-                    <!-- Alerts will be populated here -->
+                <h3><i class="fas fa-exclamation-triangle"></i> Expiry Alerts</h3>
+                <div class="alerts-container" id="alertsContainer">
+                    <p>Loading alerts...</p>
                 </div>
-            </div>
-            
-            <div class="action-buttons">
-                <button id="backToDetectionBtn" class="btn secondary-btn">
-                    <i class="fas fa-arrow-left"></i> Back to Detection
-                </button>
             </div>
         </div>
     </div>
-
+    
     <!-- Image Modal -->
     <div id="imageModal" class="modal">
         <div class="modal-content">
@@ -150,19 +296,27 @@
             const modalImg = document.getElementById('modalImage');
             
             modal.style.display = 'flex';
+            modal.classList.add('active');
             modalImg.src = imageSrc;
             
             // Close modal on background click
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
-                    modal.style.display = 'none';
+                    modal.classList.remove('active');
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                    }, 300);
                 }
             });
         }
         
         // Close modal on X click
         document.querySelector('.close-modal').addEventListener('click', function() {
-            document.getElementById('imageModal').style.display = 'none';
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
         });
     </script>
     <script src="{{ url_for('static', filename='js/inventory.js') }}"></script>

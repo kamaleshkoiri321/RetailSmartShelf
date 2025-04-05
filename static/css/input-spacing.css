@@ -1,0 +1,68 @@
+/* Additional CSS to add more space between icon and input text */
+.input-with-icon {
+    position: relative;
+    margin-bottom: 0.75rem;
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 18px; /* Move icon slightly more to the right */
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary-color);
+    opacity: 0.8;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.input-with-icon input {
+    padding-left: 3.5rem; /* Add more space between icon and text */
+    text-indent: 0;
+    transition: all 0.3s ease;
+}
+
+.input-with-icon input:focus + i {
+    color: var(--primary-dark);
+    opacity: 1;
+}
+
+/* Animation for form groups */
+.form-group.active label {
+    color: var(--primary-color);
+    font-weight: 600;
+    transform: translateY(-5px);
+}
+
+/* Button styling improvements */
+.form-actions {
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.form-actions .btn {
+    min-width: 200px;
+    border-radius: 30px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.form-actions .btn:hover {
+    transform: translateY(-5px) scale(1.02);
+}
+
+.form-actions .btn:active {
+    transform: translateY(2px);
+}
+
+/* Add animation to the login card */
+.login-card {
+    transform: translateY(20px);
+    opacity: 0;
+    animation: slideInUp 0.5s forwards 0.3s;
+}
+
+@keyframes slideInUp {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

@@ -5,26 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RetailAI - Smart Shelf Monitoring</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
 </head>
 <body class="landing-page">
     <!-- Navigation Bar -->
-    <nav id="navbar">
-        <div class="container">
+    <nav class="navbar">
+        <div class="container navbar-container">
             <div class="logo">
                 <h1>RetailAI</h1>
             </div>
             <ul class="nav-links">
-                <li><a href="#features" class="nav-scroll">Features</a></li>
-                <li><a href="#benefits" class="nav-scroll">Benefits</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#about">About</a></li>
                 <li><a href="{{ url_for('login') }}">Login</a></li>
                 <li><a href="{{ url_for('register') }}">Register</a></li>
-                <li>
-                    <button class="theme-toggle" title="Toggle theme">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                </li>
             </ul>
             <button id="mobileMenuToggle" class="mobile-menu-toggle">
                 <i class="fas fa-bars"></i>
@@ -35,175 +30,270 @@
     <!-- Mobile Navigation -->
     <div id="mobileNav" class="mobile-nav">
         <ul class="mobile-nav-links">
-            <li><a href="#features" class="nav-scroll">Features</a></li>
-            <li><a href="#benefits" class="nav-scroll">Benefits</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#about">About</a></li>
             <li><a href="{{ url_for('login') }}">Login</a></li>
             <li><a href="{{ url_for('register') }}">Register</a></li>
-            <li>
-                <button class="mobile-theme-toggle">
-                    <i class="fas fa-moon"></i> Toggle Theme
-                </button>
-            </li>
         </ul>
     </div>
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>RetailAI Smart Shelf Monitoring</h1>
-                <p>Advanced retail shelf monitoring system with AI-powered product detection and expiry tracking</p>
-                <div class="hero-buttons">
-                    <a href="{{ url_for('register') }}" class="btn primary-btn">Get Started</a>
-                    <a href="#features" class="btn secondary-btn nav-scroll">Learn More</a>
-                </div>
-            </div>
-            <div class="hero-image">
-                <img src="{{ url_for('static', filename='images/hero-image.svg') }}" alt="RetailAI Dashboard">
+        <div class="hero-content">
+            <h1 class="slide-up">Smart Shelf Monitoring <span class="highlight">Reimagined</span></h1>
+            <p class="slide-up">RetailAI transforms your retail shelf monitoring experience with cutting-edge AI technology. Track product expiry dates, manage inventory, and optimize revenue with minimal effort.</p>
+            <div class="cta-buttons">
+                <a href="{{ url_for('register') }}" class="cta-btn primary-cta">Get Started Now</a>
+                <a href="{{ url_for('login') }}" class="cta-btn secondary-cta">Login to Dashboard</a>
             </div>
         </div>
     </section>
-
+    
     <!-- Features Section -->
-    <section id="features" class="features">
+    <section id="features" class="features-section">
         <div class="container">
-            <h2 class="section-title">Key Features</h2>
-            <div class="feature-grid">
-                <div class="feature-card">
+            <div class="section-header">
+                <h2>Powerful Features</h2>
+                <p>Discover the tools and capabilities that make RetailAI the smart choice for retail shelf management</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card fade-in">
                     <div class="feature-icon">
-                        <i class="fas fa-camera"></i>
+                        <i class="fas fa-barcode"></i>
                     </div>
-                    <h3>Smart Detection</h3>
-                    <p>Capture shelf images using your device camera or upload shelf images for product detection</p>
+                    <h3>Smart Product Detection</h3>
+                    <p>Automatically detect products on your retail shelves using our advanced AI image recognition system.</p>
                 </div>
-                <div class="feature-card">
+                
+                <div class="feature-card fade-in">
                     <div class="feature-icon">
                         <i class="fas fa-calendar-alt"></i>
                     </div>
-                    <h3>Expiry Tracking</h3>
-                    <p>Automatically track product expiration dates and receive alerts for items nearing expiry</p>
+                    <h3>Expiry Date Tracking</h3>
+                    <p>Never worry about expired products again with our intelligent expiry date tracking and alerts system.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-tags"></i>
-                    </div>
-                    <h3>Discount Suggestions</h3>
-                    <p>Get intelligent discount recommendations to minimize losses on soon-to-expire products</p>
-                </div>
-                <div class="feature-card">
+                
+                <div class="feature-card fade-in">
                     <div class="feature-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
-                    <h3>Inventory Management</h3>
-                    <p>Comprehensive inventory dashboard with real-time stock levels and product status</p>
+                    <h3>Inventory Analytics</h3>
+                    <p>Gain valuable insights into your inventory with comprehensive analytics and reporting tools.</p>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Benefits Section -->
-    <section id="benefits" class="benefits">
+    
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works-section">
         <div class="container">
-            <h2 class="section-title">Why Choose RetailAI?</h2>
-            <div class="benefits-container">
-                <div class="benefit-content">
-                    <div class="benefit-item">
-                        <div class="benefit-icon">
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
-                        <div class="benefit-text">
-                            <h3>Reduce Food Waste</h3>
-                            <p>Cut inventory losses by up to 30% with proactive expiry management</p>
-                        </div>
-                    </div>
-                    <div class="benefit-item">
-                        <div class="benefit-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div class="benefit-text">
-                            <h3>Save Time</h3>
-                            <p>Automate manual inventory checks and reduce shelf monitoring time by 75%</p>
-                        </div>
-                    </div>
-                    <div class="benefit-item">
-                        <div class="benefit-icon">
-                            <i class="fas fa-smile"></i>
-                        </div>
-                        <div class="benefit-text">
-                            <h3>Improve Customer Satisfaction</h3>
-                            <p>Ensure fresh products and avoid expired items reaching your customers</p>
-                        </div>
+            <div class="section-header">
+                <h2>How It Works</h2>
+                <p>Our streamlined process makes retail shelf monitoring simple and efficient</p>
+            </div>
+            
+            <div class="steps-container">
+                <div class="step-connector"></div>
+                
+                <div class="step slide-up">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Capture Shelf Image</h3>
+                        <p>Use your camera or upload an image of your retail shelf to begin the detection process.</p>
                     </div>
                 </div>
-                <div class="benefit-image">
-                    <img src="{{ url_for('static', filename='images/benefits-image.svg') }}" alt="RetailAI Benefits">
+                
+                <div class="step slide-up">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>AI Analysis</h3>
+                        <p>Our AI system automatically analyzes the image to identify products, batch numbers, and expiry dates.</p>
+                    </div>
+                </div>
+                
+                <div class="step slide-up">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>View Results</h3>
+                        <p>Access detailed information about your products, including expiry status and recommended actions.</p>
+                    </div>
+                </div>
+                
+                <div class="step slide-up">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Take Action</h3>
+                        <p>Receive suggestions for discounts or product removal based on expiry dates to optimize sales and reduce losses.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
-
+    
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-container">
+                <div class="about-content">
+                    <h2>About RetailAI</h2>
+                    <p>RetailAI was created with a mission to revolutionize the retail industry by solving one of its biggest challenges - product expiry management.</p>
+                    <p>Our team of retail experts and AI specialists have developed a solution that helps retailers reduce waste, optimize inventory, and increase profitability.</p>
+                    <p>With RetailAI, you can transform your shelf monitoring process from a time-consuming manual task to an efficient, automated system that provides actionable insights.</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1534723452862-4c874018d66d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="RetailAI Team">
+                </div>
+            </div>
+        </div>
+    </section>
+    
     <!-- CTA Section -->
-    <section class="cta">
+    <section class="cta-section">
         <div class="container">
-            <h2>Ready to optimize your retail operations?</h2>
-            <p>Join thousands of retailers who are reducing waste and increasing profits with RetailAI</p>
-            <a href="{{ url_for('register') }}" class="btn primary-btn">Get Started Today</a>
+            <h2>Ready to Transform Your Shelf Management?</h2>
+            <p>Join thousands of retailers who are already using RetailAI to optimize their inventory management and reduce product waste.</p>
+            <div class="cta-buttons">
+                <a href="{{ url_for('register') }}" class="cta-btn primary-cta">Get Started Now</a>
+                <a href="{{ url_for('login') }}" class="cta-btn secondary-cta">Login to Dashboard</a>
+            </div>
         </div>
     </section>
-
+    
     <!-- Footer -->
-    <footer>
+    <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">
                     <h2>RetailAI</h2>
-                    <p>Smart Shelf Monitoring System</p>
+                    <p>Transforming retail shelf management with AI technology.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
                 </div>
+                
                 <div class="footer-links">
                     <h3>Quick Links</h3>
                     <ul>
+                        <li><a href="{{ url_for('index') }}">Home</a></li>
                         <li><a href="#features">Features</a></li>
-                        <li><a href="#benefits">Benefits</a></li>
-                        <li><a href="{{ url_for('login') }}">Login</a></li>
-                        <li><a href="{{ url_for('register') }}">Register</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#about">About</a></li>
                     </ul>
                 </div>
-                <div class="footer-contact">
-                    <h3>Contact Us</h3>
-                    <p><i class="fas fa-envelope"></i> info@retailai.com</p>
-                    <p><i class="fas fa-phone"></i> +1 (123) 456-7890</p>
+                
+                <div class="footer-links">
+                    <h3>Account</h3>
+                    <ul>
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                        <li><a href="{{ url_for('register') }}">Register</a></li>
+                        <li><a href="{{ url_for('detection') }}">Detection</a></li>
+                        <li><a href="{{ url_for('inventory') }}">Inventory</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
                 </div>
             </div>
+            
             <div class="footer-bottom">
                 <p>&copy; 2025 RetailAI. All rights reserved.</p>
             </div>
         </div>
     </footer>
-
-    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/mobile-nav.js') }}"></script>
+    
+    <!-- Scroll to Top Button -->
+    <div class="scroll-to-top" id="scrollToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
     <script>
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('.nav-scroll').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+        // Mobile Menu Toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mobileNav = document.getElementById('mobileNav');
+        
+        mobileMenuToggle.addEventListener('click', function() {
+            mobileNav.classList.toggle('active');
+            this.classList.toggle('active');
+        });
+        
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Scroll to Top
+        const scrollToTopButton = document.getElementById('scrollToTop');
+        
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 500) {
+                scrollToTopButton.classList.add('visible');
+            } else {
+                scrollToTopButton.classList.remove('visible');
+            }
+        });
+        
+        scrollToTopButton.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                
-                window.scrollTo({
-                    top: targetElement.offsetTop - 70,
-                    behavior: 'smooth'
-                });
-                
                 // Close mobile menu if open
-                const mobileNav = document.getElementById('mobileNav');
-                const navToggle = document.getElementById('mobileMenuToggle');
-                if (mobileNav && mobileNav.classList.contains('active')) {
-                    mobileNav.classList.remove('active');
-                    navToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                mobileNav.classList.remove('active');
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
             });
+        });
+        
+        // Intersection Observer for fade-in and slide-up animations
+        const fadeElements = document.querySelectorAll('.fade-in, .slide-up');
+        
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                    fadeObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+        
+        fadeElements.forEach(element => {
+            element.style.animationPlayState = 'paused';
+            fadeObserver.observe(element);
         });
     </script>
 </body>
