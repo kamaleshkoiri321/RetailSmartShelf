@@ -71,9 +71,15 @@ def detection():
     if request.method == 'POST':
         # Handle product detection API
         user_id = session.get('user_id')
+        data = request.get_json()
         
         # Create a new detection
         detection = Detection(user_id=user_id)
+        
+        # Save image if provided
+        if data and 'image_data' in data:
+            detection.image_path = data['image_data']  # In a real app, you might save the file to disk instead
+        
         db.session.add(detection)
         db.session.flush()  # Get the detection ID
         
@@ -136,6 +142,65 @@ def get_detections():
         'success': True,
         'detection': detection.to_dict()
     }), 200
+
+@app.route('/api/products', methods=['GET', 'POST'])
+def api_products():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'success': False, 'message': 'Not logged in'}), 401
+    
+    if request.method == 'POST':
+        # Add new product
+        data = request.get_json()
+        
+        # Create a new detection for this product
+        detection = Detection(user_id=user_id)
+        db.session.add(detection)
+        db.session.flush()  # Get the detection ID
+        
+        # Create the product
+        try:
+            product = Product(
+                name=data.get('name'),
+                batch=data.get('batch'),
+                expiry_date=datetime.datetime.strptime(data.get('expiry_date'), '%Y-%m-%d').date(),
+                quantity=data.get('quantity', 0),
+                detection_id=detection.id,
+                product_image=data.get('product_image')  # Store the base64 image
+            )
+            db.session.add(product)
+            db.session.commit()
+            
+            return jsonify({
+                'success': True,
+                'product': product.to_dict()
+            }), 201
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({
+                'success': False, 
+                'message': str(e)
+            }), 400
+    
+    # GET method - fetch all products
+    try:
+        # Get all detections for this user
+        detections = Detection.query.filter_by(user_id=user_id).all()
+        
+        # Collect all products from these detections
+        all_products = []
+        for detection in detections:
+            all_products.extend(detection.products)
+        
+        return jsonify({
+            'success': True,
+            'products': [product.to_dict() for product in all_products]
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': str(e)
+        }), 500
 
 @app.route('/inventory')
 def inventory():

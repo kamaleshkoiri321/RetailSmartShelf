@@ -26,6 +26,7 @@ class Product(db.Model):
     quantity = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     detection_id = db.Column(db.Integer, db.ForeignKey('detection.id'), nullable=False)
+    product_image = db.Column(db.Text, nullable=True)  # Base64 encoded image
 
     def is_expiring_soon(self, days=7):
         """Check if product is expiring within 'days' days."""
@@ -57,7 +58,9 @@ class Product(db.Model):
             'quantity': self.quantity,
             'days_until_expiry': self.days_until_expiry(),
             'is_expired': self.is_expired(),
-            'is_expiring_soon': self.is_expiring_soon()
+            'is_expiring_soon': self.is_expiring_soon(),
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'product_image': self.product_image
         }
 
 class Detection(db.Model):

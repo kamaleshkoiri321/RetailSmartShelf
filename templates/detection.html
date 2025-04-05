@@ -31,10 +31,25 @@
         
         <div class="detection-container">
             <div class="upload-section">
+                <div class="webcam-section">
+                    <div class="webcam-toggle-buttons">
+                        <button id="startCameraBtn" class="btn secondary-btn">
+                            <i class="fas fa-video"></i> Start Camera
+                        </button>
+                        <button id="captureImageBtn" class="btn secondary-btn" disabled>
+                            <i class="fas fa-camera"></i> Capture Image
+                        </button>
+                    </div>
+                    <div class="webcam-container">
+                        <video id="webcam" class="webcam-feed hidden" autoplay playsinline></video>
+                    </div>
+                </div>
+                
                 <div class="image-uploader" id="imageDropArea">
                     <div class="upload-instructions" id="uploadInstructions">
                         <i class="fas fa-cloud-upload-alt"></i>
                         <p>Drag & drop an image here or click to browse</p>
+                        <p class="small">Or use the webcam above to capture an image</p>
                     </div>
                     <img id="imagePreview" class="image-preview hidden">
                     <input type="file" id="imageInput" accept="image/*" class="file-input">

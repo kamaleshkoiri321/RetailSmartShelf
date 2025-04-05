@@ -30,18 +30,69 @@
         </div>
         
         <div class="inventory-container">
+            <div class="add-product-section">
+                <h3>Add New Product</h3>
+                <form id="addProductForm" class="add-product-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productName">Product Name</label>
+                            <input type="text" id="productName" name="productName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productBatch">Batch Number</label>
+                            <input type="text" id="productBatch" name="productBatch" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productQuantity">Quantity</label>
+                            <input type="number" id="productQuantity" name="productQuantity" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productExpiryDate">Expiry Date</label>
+                            <input type="date" id="productExpiryDate" name="productExpiryDate" required>
+                        </div>
+                    </div>
+                    
+                    <div class="image-capture-section">
+                        <h4>Product Image (Optional)</h4>
+                        <div class="webcam-toggle-buttons">
+                            <button type="button" id="startProductCameraBtn" class="btn secondary-btn">
+                                <i class="fas fa-video"></i> Start Camera
+                            </button>
+                            <button type="button" id="captureProductImageBtn" class="btn secondary-btn" disabled>
+                                <i class="fas fa-camera"></i> Capture Image
+                            </button>
+                        </div>
+                        <div class="webcam-container">
+                            <video id="productWebcam" class="webcam-feed hidden" autoplay playsinline></video>
+                            <img id="productImagePreview" class="image-preview hidden">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn primary-btn">
+                            <i class="fas fa-plus"></i> Add to Inventory
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
             <div class="inventory-section">
                 <h3>Product Inventory</h3>
                 <div class="table-container">
                     <table id="inventoryTable">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Product Name</th>
                                 <th>Batch Number</th>
+                                <th>Date Added</th>
                                 <th>Expiry Date</th>
                                 <th>Quantity</th>
                                 <th>Status</th>
                                 <th>Discount Suggestion</th>
+                                <th>Image</th>
                             </tr>
                         </thead>
                         <tbody id="inventoryTableBody">
@@ -66,8 +117,38 @@
         </div>
     </div>
 
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <img id="modalImage" class="modal-image">
+        </div>
+    </div>
+
     <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
     <script src="{{ url_for('static', filename='js/navigation.js') }}"></script>
+    <script>
+        // Image modal functionality
+        function showImageModal(imageSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            
+            modal.style.display = 'flex';
+            modalImg.src = imageSrc;
+            
+            // Close modal on background click
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+        
+        // Close modal on X click
+        document.querySelector('.close-modal').addEventListener('click', function() {
+            document.getElementById('imageModal').style.display = 'none';
+        });
+    </script>
     <script src="{{ url_for('static', filename='js/inventory.js') }}"></script>
 </body>
 </html>
