@@ -6,8 +6,31 @@
     <title>RetailAI - Detection</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/typography-enhancements.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-ui.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/input-spacing.css') }}">
     <style>
+        /* Enhanced typography */
+        body {
+            font-size: 17px; /* Slightly larger base font size */
+        }
+        
+        .page-header h2 {
+            font-size: 2.6rem; /* Larger header */
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+        
+        .page-header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        
         /* Enhanced detection page styling */
         .detection-container {
             gap: 2.5rem;
@@ -16,42 +39,96 @@
         .upload-section, .results-section {
             box-shadow: 0 15px 35px var(--shadow-color);
             padding: 2rem;
+            border-radius: 15px;
+        }
+        
+        /* Image capture layout - similar to inventory page */
+        .image-capture-layout {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+        
+        .image-capture-left {
+            flex: 0 0 auto;
+        }
+        
+        .image-capture-right {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
         }
         
         .webcam-container {
-            aspect-ratio: 4/3;
-            border: 3px solid var(--primary-light);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            position: relative;
             overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border: 3px solid var(--primary-light);
             transition: all 0.3s ease;
+            aspect-ratio: 1/1; /* Make it square */
+            width: 350px; /* Fixed width for square appearance */
+            height: 350px;
+            margin: 0 auto; /* Center in the available space */
         }
         
         .webcam-container:hover {
-            transform: scale(1.01);
+            transform: scale(1.02);
             box-shadow: 0 15px 30px rgba(0,0,0,0.2);
         }
         
-        .webcam-feed {
+        .webcam-feed, .image-preview {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: all 0.5s ease;
+            border-radius: 12px;
+        }
+        
+        .camera-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .camera-status {
+            text-align: center;
+            margin-top: 10px;
+            padding: 10px 18px;
+            background-color: rgba(142, 68, 173, 0.1);
+            border-radius: 20px;
+            font-size: 1rem;
+            color: var(--primary-color);
+            display: none;
+            font-weight: 500;
+        }
+        
+        .camera-status.active {
+            display: inline-block;
+            animation: fadeIn 0.3s ease;
         }
         
         .webcam-toggle-buttons {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 1.25rem;
-            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
         }
         
         .webcam-toggle-buttons .btn {
-            flex: 1;
+            min-width: 180px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            max-width: 200px;
+            gap: 10px;
+            padding: 12px 20px;
+            font-size: 1.05rem;
         }
         
         .image-uploader {
@@ -95,7 +172,7 @@
         
         .image-preview {
             max-width: 100%;
-            max-height: 400px;
+            max-height: 100%;
             object-fit: contain;
             border-radius: 10px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
@@ -110,11 +187,13 @@
         #detectButton {
             width: 100%;
             padding: 1rem;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             margin-top: 1.5rem;
             position: relative;
             overflow: hidden;
             z-index: 1;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
         
         #detectButton::before {
@@ -142,7 +221,8 @@
             color: var(--primary-color);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            font-size: 1.8rem;
         }
         
         .webcam-section h3::after, .results-section h3::after {
@@ -174,6 +254,33 @@
             min-width: 120px;
             text-align: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 0.95rem;
+        }
+        
+        /* Table styling */
+        table {
+            font-size: 1.05rem;
+        }
+        
+        table th {
+            font-weight: 700;
+            color: var(--primary-dark);
+            background-color: rgba(142, 68, 173, 0.08);
+            padding: 1rem;
+        }
+        
+        table td {
+            padding: 1rem;
+        }
+        
+        .action-buttons {
+            margin-top: 2rem;
+        }
+        
+        .action-buttons .btn {
+            padding: 0.8rem 1.5rem;
+            font-size: 1.1rem;
+            min-width: 200px;
         }
         
         .fade-in-up {
@@ -229,39 +336,53 @@
         </div>
         
         <div class="detection-container">
-            <div class="upload-section fade-in-up">
-                <div class="webcam-section">
-                    <h3><i class="fas fa-camera"></i> Capture Image</h3>
-                    <div class="webcam-toggle-buttons">
-                        <button id="startCameraBtn" class="btn secondary-btn">
-                            <i class="fas fa-video"></i> Start Camera
-                        </button>
-                        <button id="captureImageBtn" class="btn secondary-btn" disabled>
-                            <i class="fas fa-camera"></i> Capture
-                        </button>
-                    </div>
-                    <div class="webcam-container">
-                        <video id="webcam" class="webcam-feed hidden" autoplay playsinline></video>
+            <div class="upload-section fade-in-up modern-card">
+                <div class="webcam-section fade-in-up">
+                    <h3 class="gradient-text"><i class="fas fa-camera"></i> Capture Image</h3>
+                    
+                    <!-- Updated Image Capture Layout -->
+                    <div class="image-capture-layout">
+                        <!-- Left side: Camera/Image Preview -->
+                        <div class="image-capture-left">
+                            <div class="webcam-container hover-shadow border-pulse">
+                                <video id="webcam" class="webcam-feed hidden" autoplay playsinline></video>
+                                <img id="imagePreview" class="image-preview hidden">
+                            </div>
+                        </div>
+                        
+                        <!-- Right side: Controls -->
+                        <div class="image-capture-right fade-in-right delay-200">
+                            <div class="webcam-toggle-buttons">
+                                <button id="startCameraBtn" class="btn secondary-btn animated-btn">
+                                    <i class="fas fa-video"></i> Start Camera
+                                </button>
+                                <button id="captureImageBtn" class="btn secondary-btn animated-btn" disabled>
+                                    <i class="fas fa-camera"></i> Capture
+                                </button>
+                            </div>
+                            <div id="cameraStatus" class="camera-status pulse-glow">
+                                <i class="fas fa-info-circle"></i> Ready to capture
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="image-uploader" id="imageDropArea">
+                <div class="image-uploader hover-float" id="imageDropArea">
                     <div class="upload-instructions" id="uploadInstructions">
                         <i class="fas fa-cloud-upload-alt"></i>
                         <p>Drag & drop an image here or click to browse</p>
                         <p class="small">Or use the webcam above to capture an image</p>
                     </div>
-                    <img id="imagePreview" class="image-preview hidden">
                     <input type="file" id="imageInput" accept="image/*" class="file-input">
                 </div>
                 
-                <button id="detectButton" class="btn primary-btn pulse" disabled>
+                <button id="detectButton" class="btn primary-btn animated-btn pulse gradient-shift" disabled>
                     <i class="fas fa-search"></i> Detect Products
                 </button>
             </div>
             
-            <div class="results-section hidden fade-in-up" id="resultsSection" style="animation-delay: 0.3s;">
-                <h3><i class="fas fa-clipboard-check"></i> Detection Results</h3>
+            <div class="results-section hidden fade-in-up modern-card" id="resultsSection" style="animation-delay: 0.3s;">
+                <h3 class="gradient-text"><i class="fas fa-clipboard-check"></i> Detection Results</h3>
                 <div class="table-container">
                     <table id="detectionTable">
                         <thead>
@@ -280,7 +401,7 @@
                 </div>
                 
                 <div class="action-buttons">
-                    <button id="viewInventoryBtn" class="btn secondary-btn">
+                    <button id="viewInventoryBtn" class="btn secondary-btn animated-btn">
                         <i class="fas fa-clipboard-list"></i> View Inventory
                     </button>
                 </div>

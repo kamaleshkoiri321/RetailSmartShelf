@@ -1,0 +1,291 @@
+/* Modern UI enhancements for RetailAI */
+
+/* Glass-morphism effects */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Gradient borders */
+.gradient-border {
+    position: relative;
+    border-radius: 15px;
+    padding: 2px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.gradient-border::before {
+    content: "";
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    right: 1px;
+    bottom: 1px;
+    border-radius: 14px;
+    background-color: white;
+    z-index: -1;
+}
+
+/* Gradient text effects */
+.gradient-text {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+.gradient-text-alt {
+    background: linear-gradient(135deg, #6a3093, #a044ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+/* Enhanced shadows */
+.elevated-shadow {
+    box-shadow: 
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
+}
+
+.elevated-shadow:hover {
+    box-shadow: 
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Card designs */
+.modern-card {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(142, 68, 173, 0.1);
+}
+
+.modern-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(142, 68, 173, 0.2);
+}
+
+/* Neumorphic elements */
+.neumorphic {
+    background: #f0f0f3;
+    border-radius: 15px;
+    box-shadow: 
+        5px 5px 10px rgba(174, 174, 192, 0.4),
+        -5px -5px 10px rgba(255, 255, 255, 1);
+    transition: all 0.2s ease;
+}
+
+.neumorphic:hover {
+    box-shadow: 
+        inset 5px 5px 10px rgba(174, 174, 192, 0.4),
+        inset -5px -5px 10px rgba(255, 255, 255, 1);
+}
+
+/* Dynamic focus states */
+.dynamic-focus {
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.dynamic-focus:focus {
+    box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.3);
+}
+
+/* Advanced buttons */
+.btn-3d {
+    position: relative;
+    transform-style: preserve-3d;
+    transform: perspective(800px);
+    transition: all 0.3s ease;
+}
+
+.btn-3d:hover {
+    transform: perspective(800px) translateZ(10px);
+}
+
+/* Decorative elements */
+.decorative-line {
+    height: 3px;
+    width: 50px;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    margin: 15px 0;
+    border-radius: 3px;
+}
+
+.decorative-dot {
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    margin: 0 5px;
+    display: inline-block;
+}
+
+/* Section dividers */
+.wave-divider {
+    position: relative;
+    height: 70px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.wave-divider::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 10px;
+    background: linear-gradient(45deg, var(--primary-light), var(--secondary-light));
+    border-radius: 100% 100% 0 0;
+}
+
+/* Content emphasis */
+.highlight-box {
+    background-color: rgba(142, 68, 173, 0.08);
+    border-left: 4px solid var(--primary-color);
+    padding: 15px 20px;
+    margin: 20px 0;
+    border-radius: 0 5px 5px 0;
+}
+
+/* Modern inputs */
+.modern-input {
+    background-color: rgba(142, 68, 173, 0.05);
+    border: 2px solid transparent;
+    border-radius: 10px;
+    padding: 12px 15px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.modern-input:focus {
+    background-color: white;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 4px rgba(142, 68, 173, 0.1);
+}
+
+/* Interactive elements */
+.interactive-area {
+    position: relative;
+    overflow: hidden;
+}
+
+.interactive-area::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: width 0.5s, height 0.5s, opacity 0.5s;
+}
+
+.interactive-area:active::after {
+    width: 400px;
+    height: 400px;
+    opacity: 1;
+}
+
+/* Status indicators */
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.status-indicator.active {
+    background-color: #2ecc71;
+    box-shadow: 0 0 8px rgba(46, 204, 113, 0.5);
+}
+
+.status-indicator.warning {
+    background-color: #f39c12;
+    box-shadow: 0 0 8px rgba(243, 156, 18, 0.5);
+}
+
+.status-indicator.error {
+    background-color: #e74c3c;
+    box-shadow: 0 0 8px rgba(231, 76, 60, 0.5);
+}
+
+/* Enhanced image container */
+.image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+.image-container img {
+    transition: all 0.5s ease;
+}
+
+.image-container:hover img {
+    transform: scale(1.05);
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 50%);
+    opacity: 0;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: flex-end;
+    padding: 20px;
+}
+
+.image-container:hover .image-overlay {
+    opacity: 1;
+}
+
+.image-overlay-text {
+    color: white;
+    font-weight: 600;
+}
+
+/* Apply these modern styles to key elements */
+.webcam-container, .results-section, .upload-section {
+    border-radius: 20px !important;
+    overflow: hidden;
+}
+
+.btn.primary-btn {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.btn.primary-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    z-index: -1;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+.btn.primary-btn:hover::before {
+    opacity: 1;
+}

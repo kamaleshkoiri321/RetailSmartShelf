@@ -1,0 +1,166 @@
+/* Typography and Font Enhancements */
+
+/* Increase base font size */
+body {
+    font-size: 17px; /* Larger base font */
+    line-height: 1.6;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 2.2rem;
+}
+
+h3 {
+    font-size: 1.8rem;
+}
+
+h4 {
+    font-size: 1.5rem;
+}
+
+/* Gradient header text effect */
+.gradient-text {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+/* Page header enhancement */
+.page-header h2 {
+    font-size: 2.6rem;
+    letter-spacing: -0.5px;
+    font-weight: 800;
+}
+
+.page-header p {
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+}
+
+/* Button text */
+.btn {
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.primary-btn, .google-btn {
+    font-size: 1.1rem;
+}
+
+/* Form labels */
+label {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+/* Input text */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+input[type="number"] {
+    font-size: 1.05rem;
+}
+
+/* Table content */
+table {
+    font-size: 1.05rem;
+}
+
+table th {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+/* Status badges */
+.status-cell, .status-badge {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+/* Modern font feature settings */
+.feature-display {
+    font-feature-settings: "salt", "ss02";
+    letter-spacing: -0.02em;
+}
+
+/* Text shadow for better readability on colored backgrounds */
+.text-shadow {
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Enhanced link styling */
+a {
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+/* List styling */
+ul, ol {
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+/* Section descriptions */
+.section-description {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    max-width: 800px;
+}
+
+/* Card headings */
+.card-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+/* Small helper text */
+.helper-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+}
+
+/* Apply these font improvements across responsive designs */
+@media (max-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+    
+    h1 {
+        font-size: 2.2rem;
+    }
+    
+    h2 {
+        font-size: 1.8rem;
+    }
+    
+    h3 {
+        font-size: 1.5rem;
+    }
+    
+    .page-header h2 {
+        font-size: 2rem;
+    }
+}

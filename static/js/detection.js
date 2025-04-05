@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const resultsSection = document.getElementById('resultsSection');
     const detectionTableBody = document.getElementById('detectionTableBody');
     const viewInventoryBtn = document.getElementById('viewInventoryBtn');
+    const cameraStatus = document.getElementById('cameraStatus');
     
     let stream = null;
     let capturedImage = null;
@@ -28,10 +29,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add animation to button
             startCameraBtn.classList.add('pulse');
             
+            // Update status message
+            cameraStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Accessing camera...';
+            cameraStatus.classList.add('active');
+            
             stream = await navigator.mediaDevices.getUserMedia({ 
                 video: {
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 },
+                    width: { ideal: 640 },
+                    height: { ideal: 640 },
                     facingMode: 'environment' // Try to use back camera on mobile
                 }
             });
@@ -49,12 +54,25 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => captureImageBtn.classList.remove('pulse'), 1000);
             
             // Update start camera button
-            startCameraBtn.innerHTML = '<i class="fas fa-video-slash"></i> Camera On';
+            startCameraBtn.innerHTML = '<i class="fas fa-video-slash"></i> Stop Camera';
             startCameraBtn.classList.remove('pulse');
-            startCameraBtn.disabled = true;
+            
+            // Hide image preview if visible
+            if (!imagePreview.classList.contains('hidden')) {
+                imagePreview.classList.add('fade-out');
+                setTimeout(() => {
+                    imagePreview.classList.add('hidden');
+                    imagePreview.classList.remove('fade-out');
+                }, 300);
+            }
+            
+            // Update status message
+            cameraStatus.innerHTML = '<i class="fas fa-check-circle"></i> Camera ready';
+            setTimeout(() => {
+                cameraStatus.innerHTML = '<i class="fas fa-info-circle"></i> Click "Capture" to take photo';
+            }, 2000);
             
             // Reset image preview and detection results
-            imagePreview.classList.add('hidden');
             imagePreview.src = '';
             capturedImage = null;
             
@@ -72,6 +90,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
         } catch (err) {
             console.error('Error accessing webcam:', err);
+            cameraStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Camera access failed';
+            setTimeout(() => {
+                cameraStatus.classList.remove('active');
+            }, 3000);
+            
             alert('Could not access webcam. Please ensure you have a webcam connected and have given permission to use it.');
             
             // Reset button animation
@@ -85,13 +108,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Visual feedback for capture button
         captureImageBtn.classList.add('pulse');
-        
-        const canvas = document.createElement('canvas');
-        canvas.width = webcamElement.videoWidth;
-        canvas.height = webcamElement.videoHeight;
-        
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(webcamElement, 0, 0, canvas.width, canvas.height);
         
         // Add a "flash" effect
         const flash = document.createElement('div');
@@ -113,9 +129,15 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => flash.remove(), 300);
         }, 100);
         
+        const canvas = document.createElement('canvas');
+        canvas.width = webcamElement.videoWidth;
+        canvas.height = webcamElement.videoHeight;
+        
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(webcamElement, 0, 0, canvas.width, canvas.height);
+        
         // Convert to base64 and set as preview
         capturedImage = canvas.toDataURL('image/jpeg');
-        imagePreview.src = capturedImage;
         
         // Hide webcam and show preview
         webcamElement.classList.add('fade-out');
@@ -123,6 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
             webcamElement.classList.add('hidden');
             webcamElement.classList.remove('fade-out');
             
+            imagePreview.src = capturedImage;
             imagePreview.classList.remove('hidden');
             imagePreview.classList.add('fade-in');
             setTimeout(() => imagePreview.classList.remove('fade-in'), 500);
@@ -134,7 +157,18 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Reset capture button
             captureImageBtn.classList.remove('pulse');
+            captureImageBtn.disabled = true;
+            
+            // Update camera status
+            cameraStatus.innerHTML = '<i class="fas fa-check-circle"></i> Image captured!';
+            
+            // Change start camera button
+            startCameraBtn.innerHTML = '<i class="fas fa-camera"></i> Take New Photo';
+            startCameraBtn.disabled = false;
         }, 300);
+        
+        // Update upload area to show we have an image
+        uploadInstructions.style.display = 'none';
         
         // Stop webcam
         stopWebcam();
@@ -147,8 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
             stream = null;
             webcamElement.srcObject = null;
             captureImageBtn.disabled = true;
-            startCameraBtn.disabled = false;
-            startCameraBtn.innerHTML = '<i class="fas fa-video"></i> Start Camera';
+            // Leave startCameraBtn enabled so user can take a new photo
         }
     }
     
@@ -196,18 +229,34 @@ document.addEventListener('DOMContentLoaded', function() {
             // Stop webcam if running
             stopWebcam();
             
+            // Update camera status
+            cameraStatus.innerHTML = '<i class="fas fa-check-circle"></i> Image uploaded!';
+            cameraStatus.classList.add('active');
+            setTimeout(() => {
+                cameraStatus.classList.remove('active');
+            }, 3000);
+            
             // Set image preview
             imagePreview.src = e.target.result;
             capturedImage = e.target.result;
             
-            // Hide upload instructions and show image
-            uploadInstructions.style.display = 'none';
+            // Hide webcam and show image
+            webcamElement.classList.add('hidden');
             imagePreview.classList.remove('hidden');
+            imagePreview.classList.add('fade-in');
+            setTimeout(() => imagePreview.classList.remove('fade-in'), 500);
+            
+            // Hide upload instructions
+            uploadInstructions.style.display = 'none';
             
             // Enable detect button
             detectButton.disabled = false;
             detectButton.classList.add('pulse');
             setTimeout(() => detectButton.classList.remove('pulse'), 1000);
+            
+            // Update start camera button
+            startCameraBtn.innerHTML = '<i class="fas fa-camera"></i> Take New Photo';
+            startCameraBtn.disabled = false;
         };
         
         reader.readAsDataURL(file);
@@ -222,7 +271,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Add loading state
         detectButton.disabled = true;
-        detectButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Detecting...';
+        detectButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Detecting Products...';
+        
+        // Update camera status
+        cameraStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing image...';
+        cameraStatus.classList.add('active');
         
         // Simulate API call with a short delay (replace with actual API call)
         setTimeout(() => {
@@ -238,6 +291,13 @@ document.addEventListener('DOMContentLoaded', function() {
             // Reset button
             detectButton.innerHTML = '<i class="fas fa-search"></i> Detect Products';
             detectButton.disabled = false;
+            
+            // Update camera status
+            cameraStatus.innerHTML = '<i class="fas fa-check-circle"></i> Products detected!';
+            setTimeout(() => {
+                cameraStatus.classList.remove('active');
+            }, 3000);
+            
         }, 1500);
     });
     
